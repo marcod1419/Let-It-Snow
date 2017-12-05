@@ -22,13 +22,33 @@ function main() {
   // and a scene
   const renderer = new THREE.WebGLRenderer({antialias: true});
 
+  //Create Scene
+
+  const scene = new THREE.Scene();
+  // scene.background = new THREE.Color(0xb5f1ff);
+
+  //Skybox
+  scene.background = new THREE.CubeTextureLoader()
+  .setPath( 'img/skybox/' )
+  .load( [
+    '1.png',
+    '2.png',
+    '3.png',
+    '4.png',
+    '5.png',
+    '6.png'
+  ] );
+
   const camera = new THREE.PerspectiveCamera(
     20,
     window.innerWidth / window.innerHeight,
     1,
     10000
   );
-  camera.position.z = 500;
+
+  camera.position.set(0, 0, 900);
+  camera.lookAt(scene.position);
+  scene.add(camera);
 
   //Add Controls
   const controls = new THREE.TrackballControls(camera);
@@ -46,14 +66,6 @@ function main() {
 
   controls.addEventListener("change", render);
 
-  //Create Scene
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xb5f1ff);
-
-  // Add the camera to the scene.
-  scene.add(camera);
-
   // Start the renderer.
   renderer.setSize(windowWidth, windowHeight);
 
@@ -62,7 +74,7 @@ function main() {
   container.appendChild(renderer.domElement);
 
   //Floor
-  scene.add(createPlane(500, 500, 0xffffff, 0, -100, -300));
+  scene.add(createPlane(5000, 5000, 0xffffff, 0, -100, -300));
 
   //~Body~
   objects.push(createSphere(60, 50, 50, 0xffffff, 0, -60, -300));
@@ -88,17 +100,21 @@ function main() {
 
   //Text
   var loader = new THREE.FontLoader();
-  loader.load('fonts/Miraculous&Christmas_Regular.json', function ( font ) {
-      var geometry = new THREE.TextGeometry( 'Hello three.js!', {
+  loader.load('fonts/Heartbeat in Christmas_Regular.json', function ( font ) {
+      var textGeo = new THREE.TextGeometry( "Merry Christmas", {
       font: font,
-      size: 80,
-      height: 5,
+      size: 100,
+      height: 10,
       curveSegments: 12,
-      bevelEnabled: true,
+      bevelEnabled: false,
       bevelThickness: 10,
-      bevelSize: 8,
+      bevelSize: 1,
       bevelSegments: 5
     } );
+    var textMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+    var textMesh = new THREE.Mesh(textGeo, textMaterial);
+    textMesh.position.set(-200,150,-285);
+    scene.add(textMesh);
   } );
 
   for (var i = 0; i < objects.length; i++) {
