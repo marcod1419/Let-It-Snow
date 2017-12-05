@@ -51,20 +51,28 @@ function main() {
   scene.add(camera);
 
   //Add Controls
-  const controls = new THREE.TrackballControls(camera);
+  const controls = new THREE.OrbitControls( camera );
+  var rotateReset;
   controls.rotateSpeed = 1.0;
   controls.zoomSpeed = 1.2;
-  controls.panSpeed = 0.8;
-
-  controls.noZoom = false;
-  controls.noPan = false;
-
-  controls.staticMoving = true;
-  controls.dynamicDampingFactor = 0.3;
-
-  controls.keys = [65, 83, 68];
+  controls.enablePan = false;
+  controls.target.set( 0, 0, -300 )
+  controls.enableDamping = true;
+  controls.maxPolarAngle = degToRad(90);
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
+  controls.minDistance = 250;
+  controls.maxDistance = 1800;
 
   controls.addEventListener("change", render);
+
+  window.addEventListener("mousedown", function(){
+    clearTimeout(rotateReset);
+    controls.autoRotate = false;
+    rotateReset = setTimeout(function(){
+      controls.autoRotate = true;
+    }, 5000);
+  });
 
   // Start the renderer.
   renderer.setSize(windowWidth, windowHeight);
