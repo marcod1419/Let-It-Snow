@@ -1,8 +1,16 @@
 "use strict";
 function main() {
   // Set the scene size.
-  const WIDTH = 1280;
-  const HEIGHT = 720;
+  var windowWidth = window.innerWidth;
+  var windowHeight = window.innerHeight;
+
+  window.addEventListener("resize", function(){
+    windowWidth = window.innerWidth;
+    windowHeight = window.innerHeight;
+    renderer.setSize(windowWidth, windowHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  })
 
   var objects = [];
   var lights = [];
@@ -47,7 +55,7 @@ function main() {
   scene.add(camera);
 
   // Start the renderer.
-  renderer.setSize(WIDTH, HEIGHT);
+  renderer.setSize(windowWidth, windowHeight);
 
   // Attach the renderer-supplied
   // DOM element.
@@ -68,6 +76,7 @@ function main() {
   objects.push(createSphere(2, 50, 50, 0x000000, 8, 85, -272));
 
   //Nose
+  objects.push(createCone(3, 20, 32, 32, 0xf48342, 0, 75, -265, 90, 0, 0));
 
   //Mouth
   objects.push(createSphere(2, 50, 50, 0x000000, -13, 68, -275));
@@ -76,6 +85,21 @@ function main() {
   objects.push(createSphere(2, 50, 50, 0x000000, 3, 63, -275));
   objects.push(createSphere(2, 50, 50, 0x000000, 13, 68, -275));
   objects.push(createSphere(2, 50, 50, 0x000000, 8, 65, -275));
+
+  //Text
+  var loader = new THREE.FontLoader();
+  loader.load('fonts/Miraculous&Christmas_Regular.json', function ( font ) {
+      var geometry = new THREE.TextGeometry( 'Hello three.js!', {
+      font: font,
+      size: 80,
+      height: 5,
+      curveSegments: 12,
+      bevelEnabled: true,
+      bevelThickness: 10,
+      bevelSize: 8,
+      bevelSegments: 5
+    } );
+  } );
 
   for (var i = 0; i < objects.length; i++) {
     scene.add(objects[i]);
@@ -90,46 +114,6 @@ function main() {
   for (var i = 0; i < lights.length; i++) {
     scene.add(lights[i]);
   }
-
-  //Particles
-  // create the particle variables
-  var particleCount = 1800,
-    particles = new THREE.Geometry(),
-    pMaterial = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 15,
-      map: new THREE.TextureLoader().load("img/snow.png"),
-      blending: THREE.AdditiveBlending,
-      transparent: true
-    });
-
-  // now create the individual particles
-  for (var p = 0; p < particleCount; p++) {
-    // create a particle with random
-    // position values, -250 -> 250
-    var pX = Math.random() * 500 - 250,
-      pY = Math.random() * 500 - 250,
-      pZ = Math.random() * 500 - 250,
-      particle = new THREE.Vector3(pX, pY, pZ);
-
-    // create a velocity vector
-    particle.velocity = new THREE.Vector3(
-      0, // x
-      -Math.random(), // y: random vel
-      0
-    );
-    // add it to the geometry
-    particles.vertices.push(particle);
-  }
-
-  // create the particle system
-  var particleSystem = new THREE.Points(particles, pMaterial);
-
-  particleSystem.sortParticles = true;
-  particleSystem.position.z = -300;
-
-  // add it to the scene
-  scene.add(particleSystem);
 
   render();
   animate();
@@ -153,7 +137,7 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos) {
   const sphereMaterial = new THREE.MeshLambertMaterial({
     color: colour
   });
-
+  
   const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS),
     sphereMaterial
@@ -172,6 +156,40 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos) {
   }
 
   return sphere;
+}
+
+function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot){
+  var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
+  var material = new THREE.MeshLambertMaterial( {color: colour} );
+
+  const cone = new THREE.Mesh( geometry, material );
+
+  if (xPos) {
+    cone.position.x = xPos;
+  }
+
+  if (yPos) {
+    cone.position.y = yPos;
+  }
+
+  if (zPos) {
+    cone.position.z = zPos;
+  }
+
+  if (xRot) {
+    cone.rotation.x = degToRad(xRot);
+  }
+
+  if (yRot) {
+    cone.rotation.y = degToRad(yRot);
+  }
+
+  if (zRot) {
+    cone.rotation.z = degToRad(zRot);
+  }
+
+  return cone
+
 }
 
 function createPointLight(xPos, yPos, zPos, colour, str, dist) {
@@ -208,6 +226,10 @@ function createPlane(width, height, colour, xPos, yPos, zPos) {
     plane.position.z = zPos;
   }
   return plane;
+}
+
+function degToRad(deg){
+  return deg*(Math.PI/180);
 }
 
 main();
