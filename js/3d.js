@@ -72,7 +72,7 @@ window.onload = function() {
   animate();
 };
   //Add Controls
-  const controls = new THREE.OrbitControls( camera );
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
   var rotateReset;
   controls.rotateSpeed = 1.0;
   controls.zoomSpeed = 1.2;
