@@ -76,7 +76,7 @@ function main() {
   controls.rotateSpeed = 1.0;
   controls.zoomSpeed = 1.2;
   controls.enablePan = false;
-  controls.target.set(0, 0, -300);
+  controls.target.set(0, 50, -300);
   controls.enableDamping = true;
   controls.maxPolarAngle = degToRad(90);
   controls.autoRotate = true;
@@ -154,7 +154,7 @@ function main() {
   //Text
   var loader = new THREE.FontLoader();
   loader.load("fonts/Heartbeat in Christmas_Regular.json", function(font) {
-    var textGeo = new THREE.TextGeometry("Merry Christmas", {
+    var textGeo = new THREE.TextGeometry("Happy Holidays", {
       font: font,
       size: 100,
       height: 10,
@@ -164,7 +164,13 @@ function main() {
       bevelSize: 1,
       bevelSegments: 5
     });
-    var textMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+
+    var texture = new THREE.TextureLoader().load("img/candycane.png");
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 0.05, 0.05 );
+
+    var textMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, map: texture});
     var textMesh = new THREE.Mesh(textGeo, textMaterial);
     textMesh.position.set(-200, 150, -305);
     scene.add(textMesh);
@@ -175,8 +181,10 @@ function main() {
   }
 
   //Lights
-  lights.push(createPointLight(-100, -100, -130, 0xff0000, 0.3));
+  lights.push(createPointLight(-100, 100, -130, 0xff0000, 0.3));
   lights.push(createPointLight(100, 100, -130, 0x00ff00, 0.3));
+  lights.push(createPointLight(0, 0, -400, 0x0000ff, 0.5));
+
   lights.push(setAmbientLight(0xb5f1ff, 0.9));
 
   var cameraLight = createPointLight(0, 0, 0, 0xffffff, 0.8); //0.8 = on
@@ -186,8 +194,58 @@ function main() {
     scene.add(lights[i]);
   }
 
+
+//Snow
+var snowGeometry = new THREE.Geometry();
+var particleCount = 10000;
+
+for ( var i = 0; i < particleCount; i ++ ) {
+
+	var snow = new THREE.Vector3();
+	snow.x = THREE.Math.randFloatSpread( 2000 );
+	snow.y = THREE.Math.randFloatSpread( 2000 );
+	snow.z = THREE.Math.randFloatSpread( 2000 );
+
+	snow.velocity = new THREE.Vector3(-Math.random(), 0, 0);   
+
+	snowGeometry.vertices.push( snow );
+
+}
+
+var snowMaterial = new THREE.PointsMaterial( {size: 10, color: 0xffffff, map: new THREE.TextureLoader().load("img/snow.png"),  blending: THREE.AdditiveBlending, transparent: true});
+
+var snowFall = new THREE.Points( snowGeometry, snowMaterial );
+snowFall.sortParticles = true;
+
+
+scene.add( snowFall );
+
+
+
+
+
   function animate() {
     requestAnimationFrame(animate);
+
+    //Animate Snow
+    snowFall.rotation.y += 0.001;
+     var pCount = particleCount;
+     while (pCount--) {
+     	  var particle = snowGeometry.vertices[pCount];
+     	   if (particle.x < -200) {
+		      particle.x = 200;
+		      particle.velocity.x = 0;
+		    }
+		    particle.velocity.x -= Math.random() * .1;
+
+		    particle.x = particle.velocity.x;
+		    particle.y = particle.velocity.y;
+		    particle.z = particle.velocity.z;
+		  
+     }
+
+      snowFall.geometry.__dirtyVertices = true;
+
 
     controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
     controls.autoRotate = this.settings.cameraAutoRotate;
@@ -350,7 +408,7 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   var texture = new THREE.TextureLoader().load(texturePath);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 4, 4 );
+  texture.repeat.set( 16, 16 );
 
   var normalMap;
 
