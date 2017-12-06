@@ -27,16 +27,9 @@ function main() {
   // scene.background = new THREE.Color(0xb5f1ff);
 
   //Skybox
-  scene.background = new THREE.CubeTextureLoader()
-  .setPath("img/skybox/")
-  .load(["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"]);
+  scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"]);
 
-  const camera = new THREE.PerspectiveCamera(
-    20,
-    window.innerWidth / window.innerHeight,
-    1,
-    10000
-  );
+  const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
 
   camera.position.set(0, 0, 900);
   camera.lookAt(scene.position);
@@ -101,55 +94,31 @@ function main() {
   container.appendChild(renderer.domElement);
 
   //Floor
-  scene.add(
-    createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png")
-  );
+  scene.add(createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Body~
-  objects.push(
-    createSphere(60,50,50,0xffffff,0,-60,-300,"img/ground_snow.jpg", "img/ground_snow_normal.png")
-  );
-  objects.push(
-    createSphere(40,50,50,0xffffff,0,20,-300,"img/ground_snow.jpg", "img/ground_snow_normal.png")
-  );
-  objects.push(
-    createSphere(30,50,50,0xffffff,0,80,-300,"img/ground_snow.jpg", "img/ground_snow_normal.png")
-  );
+  objects.push(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  objects.push(createSphere(40, 50, 50, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  objects.push(createSphere(30, 50, 50, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Face~
 
   //Eyes
-  objects.push(
-    createSphere(2,50,50,0xffffff,-8,85,-272,"img/rock.png", "img/rock_normal.png")
-  );
-  objects.push(
-    createSphere( 2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png")
-  );
+  objects.push(createSphere(2, 50, 50, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  objects.push(createSphere(2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
 
   //Nose
-  objects.push(
-    createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png")
-  );
+  objects.push(createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png"));
 
   //Mouth
-  objects.push(
-    createSphere( 2, 50, 50, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png")
-  );
-  objects.push(
-    createSphere( 2, 50, 50, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png")
-  );
-  objects.push(
-    createSphere( 2, 50, 50, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png")
-  );
-  objects.push(
-    createSphere( 2, 50, 50, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png")
-  );
-  objects.push(
-    createSphere(2,50,50,0xffffff,13,68,-275,"img/rock.png","img/rock_normal.png")
-  );
-  objects.push(
-    createSphere(2,50,50,0xffffff,8,65,-275,"img/rock.png","img/rock_normal.png")
-  );
+  objects.push(createSphere(2, 50, 50, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  objects.push(createSphere(2, 50, 50, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  objects.push(createSphere(2, 50, 50, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  objects.push(createSphere(2, 50, 50, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  objects.push(createSphere(2, 50, 50, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  objects.push(createSphere(2, 50, 50, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+
+  //Trees
 
   //Text
   var loader = new THREE.FontLoader();
@@ -168,7 +137,7 @@ function main() {
     var texture = new THREE.TextureLoader().load("img/candycane.png");
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set( 0.05, 0.05 );
+    texture.repeat.set(0.05, 0.05);
 
     var textMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, map: texture});
     var textMesh = new THREE.Mesh(textGeo, textMaterial);
@@ -194,63 +163,55 @@ function main() {
     scene.add(lights[i]);
   }
 
+  //Snow
+  var snowGeometry = new THREE.Geometry();
+  var particleCount = 10000;
 
-//Snow
-var snowGeometry = new THREE.Geometry();
-var particleCount = 10000;
+  for (var i = 0; i < particleCount; i++) {
+    var snow = new THREE.Vector3();
+    snow.x = THREE.Math.randFloatSpread(2000);
+    snow.y = THREE.Math.randFloatSpread(2000);
+    snow.z = THREE.Math.randFloatSpread(2000);
 
-for ( var i = 0; i < particleCount; i ++ ) {
+    snow.velocity = new THREE.Vector3(0, -Math.random(), 0);
 
-	var snow = new THREE.Vector3();
-	snow.x = THREE.Math.randFloatSpread( 2000 );
-	snow.y = THREE.Math.randFloatSpread( 2000 );
-	snow.z = THREE.Math.randFloatSpread( 2000 );
+    snowGeometry.vertices.push(snow);
+  }
 
-	snow.velocity = new THREE.Vector3(0, -Math.random(), 0);   
+  var snowMaterial = new THREE.PointsMaterial({
+    size: 10,
+    color: 0xffffff,
+    map: new THREE.TextureLoader().load("img/snow.png"),
+    blending: THREE.AdditiveBlending,
+    transparent: true
+  });
 
-	snowGeometry.vertices.push( snow );
+  var snowFall = new THREE.Points(snowGeometry, snowMaterial);
+  snowFall.sortParticles = true;
 
-}
+  scene.add(snowFall);
 
-var snowMaterial = new THREE.PointsMaterial( {size: 10, color: 0xffffff, map: new THREE.TextureLoader().load("img/snow.png"),  blending: THREE.AdditiveBlending, transparent: true});
+  //Physics
+  var particles = setInterval(function() {
+    //Animate Snow
+    var pCount = particleCount;
+    while (pCount--) {
+      var particle = snowGeometry.vertices[pCount];
+      var randomStop = -Math.random() * (1200 * 200) + 200;
+      if (particle.y < randomStop) {
+        particle.y = 900;
+        particle.velocity.y = 0;
+      }
+      particle.velocity.y -= Math.random() * (0.005 * 0.001) + 0.001;
 
-var snowFall = new THREE.Points( snowGeometry, snowMaterial );
-snowFall.sortParticles = true;
-
-
-scene.add( snowFall );
-
-
-//Physics
-var particles = setInterval(function(){
-	 //Animate Snow
-    // snowFall.rotation.y += 0.001;
-     var pCount = particleCount;
-     while (pCount--) {
-     	  var particle = snowGeometry.vertices[pCount];
-     	  var randomStop = -Math.random() * (1000 * 200) + 200;
-     	   if (particle.y < randomStop) {
-		      particle.y = 900;
-		      particle.velocity.y = 0;
-		    }
-		    particle.velocity.y -= Math.random() * (0.005 * 0.001) + 0.001;
-
-		   particle.add(
-		      particle.velocity);
-		  
-     }
- }, 1000/60)
-
-
-
+      particle.add(particle.velocity);
+    }
+  }, 1000 / 60);
 
   function animate() {
     requestAnimationFrame(animate);
 
-   
-
-      snowFall.geometry.verticesNeedUpdate = true;
-
+    snowFall.geometry.verticesNeedUpdate = true;
 
     controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
     controls.autoRotate = this.settings.cameraAutoRotate;
@@ -263,13 +224,13 @@ var particles = setInterval(function(){
 
     if (this.settings.pointLights) {
       for (var i = 0; i < lights.length; i++) {
-        if(lights[i].type !== "AmbientLight"){
+        if (lights[i].type !== "AmbientLight") {
           lights[i].visible = true;
         }
       }
     } else {
       for (var i = 0; i < lights.length; i++) {
-        if(lights[i].type !== "AmbientLight"){
+        if (lights[i].type !== "AmbientLight") {
           lights[i].visible = false;
         }
       }
@@ -277,16 +238,16 @@ var particles = setInterval(function(){
 
     if (this.settings.ambientLight) {
       for (var i = 0; i < lights.length; i++) {
-        if(lights[i].type === "AmbientLight"){
+        if (lights[i].type === "AmbientLight") {
           lights[i].visible = true;
-          lights[i].intensity = this.settings.ambientLightStrength
+          lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
     } else {
       for (var i = 0; i < lights.length; i++) {
-        if(lights[i].type === "AmbientLight"){
+        if (lights[i].type === "AmbientLight") {
           lights[i].visible = false;
-          lights[i].intensity = this.settings.ambientLightStrength
+          lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
     }
@@ -321,10 +282,7 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
     normalMap: normalMap
   });
 
-  const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS),
-    sphereMaterial
-  );
+  const sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS), sphereMaterial);
 
   if (xPos) {
     sphere.position.x = xPos;
@@ -413,7 +371,7 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   var texture = new THREE.TextureLoader().load(texturePath);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 16, 16 );
+  texture.repeat.set(16, 16);
 
   var normalMap;
 
@@ -444,6 +402,8 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   }
   return plane;
 }
+
+function createTree(width, height, xPos, yPos, zPos) {}
 
 function degToRad(deg) {
   return deg * (Math.PI / 180);
