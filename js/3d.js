@@ -44,7 +44,7 @@ function main() {
 
   //GUI
   var settings = function() {
-    this.cameraAutoRotate = true;
+    this.cameraAutoRotate = false;
     this.cameraAutoRotateSpeed = 0.15;
     this.flashlight = false;
     this.flashlightStrength = 0.8;
@@ -206,7 +206,7 @@ for ( var i = 0; i < particleCount; i ++ ) {
 	snow.y = THREE.Math.randFloatSpread( 2000 );
 	snow.z = THREE.Math.randFloatSpread( 2000 );
 
-	snow.velocity = new THREE.Vector3(-Math.random(), 0, 0);   
+	snow.velocity = new THREE.Vector3(0, -Math.random(), 0);   
 
 	snowGeometry.vertices.push( snow );
 
@@ -221,30 +221,35 @@ snowFall.sortParticles = true;
 scene.add( snowFall );
 
 
+//Physics
+var particles = setInterval(function(){
+	 //Animate Snow
+    // snowFall.rotation.y += 0.001;
+     var pCount = particleCount;
+     while (pCount--) {
+     	  var particle = snowGeometry.vertices[pCount];
+     	  var randomStop = -Math.random() * (1000 * 200) + 200;
+     	   if (particle.y < randomStop) {
+		      particle.y = 900;
+		      particle.velocity.y = 0;
+		    }
+		    particle.velocity.y -= Math.random() * (0.005 * 0.001) + 0.001;
+
+		   particle.add(
+		      particle.velocity);
+		  
+     }
+ }, 1000/60)
+
 
 
 
   function animate() {
     requestAnimationFrame(animate);
 
-    //Animate Snow
-    snowFall.rotation.y += 0.001;
-     var pCount = particleCount;
-     while (pCount--) {
-     	  var particle = snowGeometry.vertices[pCount];
-     	   if (particle.x < -200) {
-		      particle.x = 200;
-		      particle.velocity.x = 0;
-		    }
-		    particle.velocity.x -= Math.random() * .1;
+   
 
-		    particle.x = particle.velocity.x;
-		    particle.y = particle.velocity.y;
-		    particle.z = particle.velocity.z;
-		  
-     }
-
-      snowFall.geometry.__dirtyVertices = true;
+      snowFall.geometry.verticesNeedUpdate = true;
 
 
     controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
