@@ -116,35 +116,35 @@ function main() {
 
   //Eyes
   objects.push(
-    createSphere(2,50,50,0x000000,-8,85,-272,"img/rock.png","img/rock_normal.png")
+    createSphere(2,50,50,0xffffff,-8,85,-272,"img/rock.png","img/rock_normal.png")
   );
   objects.push(
-    createSphere( 2, 50, 50, 0x000000, 8, 85, -272, "img/rock.png", "img/rock_normal.png")
+    createSphere( 2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png")
   );
 
   //Nose
   objects.push(
-    createCone(3, 20, 32, 32, 0xf48342, 0, 75, -265, 90, 0, 0, "img/carrot.png")
+    createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png")
   );
 
   //Mouth
   objects.push(
-    createSphere( 2, 50, 50, 0x000000, -13, 68, -275, "img/rock.png", "img/rock_normal.png")
+    createSphere( 2, 50, 50, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png")
   );
   objects.push(
-    createSphere( 2, 50, 50, 0x000000, -8, 65, -275, "img/rock.png", "img/rock_normal.png")
+    createSphere( 2, 50, 50, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png")
   );
   objects.push(
-    createSphere( 2, 50, 50, 0x000000, -3, 63, -275, "img/rock.png", "img/rock_normal.png")
+    createSphere( 2, 50, 50, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png")
   );
   objects.push(
-    createSphere( 2, 50, 50, 0x000000, 3, 63, -275, "img/rock.png", "img/rock_normal.png")
+    createSphere( 2, 50, 50, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png")
   );
   objects.push(
-    createSphere(2,50,50,0x000000,13,68,-275,"img/rock.png","img/rock_normal.png")
+    createSphere(2,50,50,0xffffff,13,68,-275,"img/rock.png","img/rock_normal.png")
   );
   objects.push(
-    createSphere(2,50,50,0x000000,8,65,-275,"img/rock.png","img/rock_normal.png")
+    createSphere(2,50,50,0xffffff,8,65,-275,"img/rock.png","img/rock_normal.png")
   );
 
   //Text
@@ -254,11 +254,18 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
   return sphere;
 }
 
-function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath
-) {
+function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap) {
   var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
   var texture = new THREE.TextureLoader().load(texturePath);
-  var material = new THREE.MeshPhongMaterial({color: colour, map: texture});
+  var normalMap;
+
+  if (normalMap) {
+    normalMap = new THREE.TextureLoader().load(normalMap);
+  } else {
+    normalMap = null;
+  }
+
+  var material = new THREE.MeshPhongMaterial({color: colour, map: texture, normalMap: normalMap});
 
   const cone = new THREE.Mesh(geometry, material);
 
@@ -307,6 +314,9 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath) {
   var geometry = new THREE.PlaneGeometry(width, height, 32);
 
   var texture = new THREE.TextureLoader().load(texturePath);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 4, 4 );
 
   var material = new THREE.MeshBasicMaterial({
     color: colour,
