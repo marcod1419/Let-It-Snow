@@ -3,13 +3,13 @@ function main() {
   var windowWidth = window.innerWidth;
   var windowHeight = window.innerHeight;
 
-  window.addEventListener("resize", function(){
+  window.addEventListener("resize", function() {
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
     renderer.setSize(windowWidth, windowHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-  })
+  });
 
   var objects = [];
   var lights = [];
@@ -28,15 +28,8 @@ function main() {
 
   //Skybox
   scene.background = new THREE.CubeTextureLoader()
-  .setPath( 'img/skybox/' )
-  .load( [
-    '1.png',
-    '2.png',
-    '3.png',
-    '4.png',
-    '5.png',
-    '6.png'
-  ] );
+  .setPath("img/skybox/")
+  .load(["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"]);
 
   const camera = new THREE.PerspectiveCamera(
     20,
@@ -56,28 +49,30 @@ function main() {
     this.flashlight = false;
     this.flashlightStrength = 0.8;
     this.pointLights = true;
-    this.fun = function() { console.log("BOOM!"); };
-  }
+    this.fun = function() {
+      console.log("BOOM!");
+    };
+  };
 
-window.onload = function() {
-  this.settings = new settings();
-  var gui = new dat.GUI();
-  gui.add(this.settings, 'cameraAutoRotate');
-  gui.add(this.settings, 'cameraAutoRotateSpeed', 0.15, 5);
-  gui.add(this.settings, 'flashlight');
-  gui.add(this.settings, 'flashlightStrength', 0.1, 2);
-  gui.add(this.settings, 'pointLights');
-  gui.add(this.settings, 'fun');
-  render();
-  animate();
-};
+  window.onload = function() {
+    this.settings = new settings();
+    var gui = new dat.GUI();
+    gui.add(this.settings, "cameraAutoRotate");
+    gui.add(this.settings, "cameraAutoRotateSpeed", 0.15, 5);
+    gui.add(this.settings, "flashlight");
+    gui.add(this.settings, "flashlightStrength", 0.1, 2);
+    gui.add(this.settings, "pointLights");
+    gui.add(this.settings, "fun");
+    render();
+    animate();
+  };
   //Add Controls
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   var rotateReset;
   controls.rotateSpeed = 1.0;
   controls.zoomSpeed = 1.2;
   controls.enablePan = false;
-  controls.target.set( 0, 0, -300 )
+  controls.target.set(0, 0, -300);
   controls.enableDamping = true;
   controls.maxPolarAngle = degToRad(90);
   controls.autoRotate = true;
@@ -102,34 +97,60 @@ window.onload = function() {
   container.appendChild(renderer.domElement);
 
   //Floor
-  scene.add(createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg"));
+  scene.add(
+    createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg")
+  );
 
   //~Body~
-  objects.push(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  objects.push(createSphere(40, 50, 50, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  objects.push(createSphere(30, 50, 50, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  objects.push(
+    createSphere(60,50,50,0xffffff,0,-60,-300,"img/ground_snow.jpg","img/ground_snow_normal.png")
+  );
+  objects.push(
+    createSphere(40,50,50,0xffffff,0,20,-300,"img/ground_snow.jpg","img/ground_snow_normal.png")
+  );
+  objects.push(
+    createSphere(30,50,50,0xffffff,0,80,-300,"img/ground_snow.jpg","img/ground_snow_normal.png")
+  );
 
   //~Face~
 
   //Eyes
-  objects.push(createSphere(2, 50, 50, 0x000000, -8, 85, -272));
-  objects.push(createSphere(2, 50, 50, 0x000000, 8, 85, -272));
+  objects.push(
+    createSphere(2,50,50,0x000000,-8,85,-272,"img/rock.png","img/rock_normal.png")
+  );
+  objects.push(
+    createSphere( 2, 50, 50, 0x000000, 8, 85, -272, "img/rock.png", "img/rock_normal.png")
+  );
 
   //Nose
-  objects.push(createCone(3, 20, 32, 32, 0xf48342, 0, 75, -265, 90, 0, 0, "img/carrot.png"));
+  objects.push(
+    createCone(3, 20, 32, 32, 0xf48342, 0, 75, -265, 90, 0, 0, "img/carrot.png")
+  );
 
   //Mouth
-  objects.push(createSphere(2, 50, 50, 0x000000, -13, 68, -275));
-  objects.push(createSphere(2, 50, 50, 0x000000, -8, 65, -275));
-  objects.push(createSphere(2, 50, 50, 0x000000, -3, 63, -275));
-  objects.push(createSphere(2, 50, 50, 0x000000, 3, 63, -275));
-  objects.push(createSphere(2, 50, 50, 0x000000, 13, 68, -275));
-  objects.push(createSphere(2, 50, 50, 0x000000, 8, 65, -275));
+  objects.push(
+    createSphere( 2, 50, 50, 0x000000, -13, 68, -275, "img/rock.png", "img/rock_normal.png")
+  );
+  objects.push(
+    createSphere( 2, 50, 50, 0x000000, -8, 65, -275, "img/rock.png", "img/rock_normal.png")
+  );
+  objects.push(
+    createSphere( 2, 50, 50, 0x000000, -3, 63, -275, "img/rock.png", "img/rock_normal.png")
+  );
+  objects.push(
+    createSphere( 2, 50, 50, 0x000000, 3, 63, -275, "img/rock.png", "img/rock_normal.png")
+  );
+  objects.push(
+    createSphere(2,50,50,0x000000,13,68,-275,"img/rock.png","img/rock_normal.png")
+  );
+  objects.push(
+    createSphere(2,50,50,0x000000,8,65,-275,"img/rock.png","img/rock_normal.png")
+  );
 
   //Text
   var loader = new THREE.FontLoader();
-  loader.load('fonts/Heartbeat in Christmas_Regular.json', function ( font ) {
-      var textGeo = new THREE.TextGeometry( "Merry Christmas", {
+  loader.load("fonts/Heartbeat in Christmas_Regular.json", function(font) {
+    var textGeo = new THREE.TextGeometry("Merry Christmas", {
       font: font,
       size: 100,
       height: 10,
@@ -138,12 +159,12 @@ window.onload = function() {
       bevelThickness: 10,
       bevelSize: 1,
       bevelSegments: 5
-    } );
+    });
     var textMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
     var textMesh = new THREE.Mesh(textGeo, textMaterial);
-    textMesh.position.set(-200,150,-285);
+    textMesh.position.set(-200, 150, -305);
     scene.add(textMesh);
-  } );
+  });
 
   for (var i = 0; i < objects.length; i++) {
     scene.add(objects[i]);
@@ -167,20 +188,18 @@ window.onload = function() {
     controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
     controls.autoRotate = this.settings.cameraAutoRotate;
 
-    if(this.settings.flashlight){
+    if (this.settings.flashlight) {
       cameraLight.intensity = this.settings.flashlightStrength;
-    }
-    else{
+    } else {
       cameraLight.intensity = 0;
     }
 
-    if(this.settings.pointLights){
-      for(var i = 0; i < lights.length; i++){
+    if (this.settings.pointLights) {
+      for (var i = 0; i < lights.length; i++) {
         lights[i].visible = true;
       }
-    }
-    else{
-      for(var i = 0; i < lights.length; i++){
+    } else {
+      for (var i = 0; i < lights.length; i++) {
         lights[i].visible = false;
       }
     }
@@ -203,10 +222,9 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
   var texture = new THREE.TextureLoader().load(texturePath);
   var normalMap;
 
-  if (normalMap){
+  if (normalMap) {
     normalMap = new THREE.TextureLoader().load(normalMap);
-  }
-  else{
+  } else {
     normalMap = null;
   }
 
@@ -215,7 +233,7 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
     map: texture,
     normalMap: normalMap
   });
-  
+
   const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS),
     sphereMaterial
@@ -236,12 +254,13 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
   return sphere;
 }
 
-function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath){
+function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath
+) {
   var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
   var texture = new THREE.TextureLoader().load(texturePath);
-  var material = new THREE.MeshLambertMaterial({color: colour, map: texture});
+  var material = new THREE.MeshPhongMaterial({color: colour, map: texture});
 
-  const cone = new THREE.Mesh( geometry, material );
+  const cone = new THREE.Mesh(geometry, material);
 
   if (xPos) {
     cone.position.x = xPos;
@@ -267,8 +286,7 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
     cone.rotation.z = degToRad(zRot);
   }
 
-  return cone
-
+  return cone;
 }
 
 function createPointLight(xPos, yPos, zPos, colour, str) {
@@ -311,8 +329,8 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath) {
   return plane;
 }
 
-function degToRad(deg){
-  return deg*(Math.PI/180);
+function degToRad(deg) {
+  return deg * (Math.PI / 180);
 }
 
 main();
