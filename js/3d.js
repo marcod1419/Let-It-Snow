@@ -49,6 +49,8 @@ function main() {
     this.flashlight = false;
     this.flashlightStrength = 0.8;
     this.pointLights = true;
+    this.ambientLight = true;
+    this.ambientLightStrength = 0.9;
     this.fun = function() {
       console.log("BOOM!");
     };
@@ -62,6 +64,8 @@ function main() {
     gui.add(this.settings, "flashlight");
     gui.add(this.settings, "flashlightStrength", 0.1, 2);
     gui.add(this.settings, "pointLights");
+    gui.add(this.settings, "ambientLight");
+    gui.add(this.settings, "ambientLightStrength", 0.1, 2);
     gui.add(this.settings, "fun");
     render();
     animate();
@@ -98,25 +102,25 @@ function main() {
 
   //Floor
   scene.add(
-    createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg")
+    createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png")
   );
 
   //~Body~
   objects.push(
-    createSphere(60,50,50,0xffffff,0,-60,-300,"img/ground_snow.jpg","img/ground_snow_normal.png")
+    createSphere(60,50,50,0xffffff,0,-60,-300,"img/ground_snow.jpg", "img/ground_snow_normal.png")
   );
   objects.push(
-    createSphere(40,50,50,0xffffff,0,20,-300,"img/ground_snow.jpg","img/ground_snow_normal.png")
+    createSphere(40,50,50,0xffffff,0,20,-300,"img/ground_snow.jpg", "img/ground_snow_normal.png")
   );
   objects.push(
-    createSphere(30,50,50,0xffffff,0,80,-300,"img/ground_snow.jpg","img/ground_snow_normal.png")
+    createSphere(30,50,50,0xffffff,0,80,-300,"img/ground_snow.jpg", "img/ground_snow_normal.png")
   );
 
   //~Face~
 
   //Eyes
   objects.push(
-    createSphere(2,50,50,0xffffff,-8,85,-272,"img/rock.png","img/rock_normal.png")
+    createSphere(2,50,50,0xffffff,-8,85,-272,"img/rock.png", "img/rock_normal.png")
   );
   objects.push(
     createSphere( 2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png")
@@ -196,11 +200,31 @@ function main() {
 
     if (this.settings.pointLights) {
       for (var i = 0; i < lights.length; i++) {
-        lights[i].visible = true;
+        if(lights[i].type !== "AmbientLight"){
+          lights[i].visible = true;
+        }
       }
     } else {
       for (var i = 0; i < lights.length; i++) {
-        lights[i].visible = false;
+        if(lights[i].type !== "AmbientLight"){
+          lights[i].visible = false;
+        }
+      }
+    }
+
+    if (this.settings.ambientLight) {
+      for (var i = 0; i < lights.length; i++) {
+        if(lights[i].type === "AmbientLight"){
+          lights[i].visible = true;
+          lights[i].intensity = this.settings.ambientLightStrength
+        }
+      }
+    } else {
+      for (var i = 0; i < lights.length; i++) {
+        if(lights[i].type === "AmbientLight"){
+          lights[i].visible = false;
+          lights[i].intensity = this.settings.ambientLightStrength
+        }
       }
     }
 
@@ -306,11 +330,21 @@ function createPointLight(xPos, yPos, zPos, colour, str) {
   return pointLight;
 }
 
+function createSpotLight(xPos, yPos, zPos, colour, str) {
+  const spotLight = new THREE.SpotLight(colour, str);
+
+  spotLight.position.x = xPos;
+  spotLight.position.y = yPos;
+  spotLight.position.z = zPos;
+
+  return spotLight;
+}
+
 function setAmbientLight(colour, str) {
   return new THREE.AmbientLight(colour, str);
 }
 
-function createPlane(width, height, colour, xPos, yPos, zPos, texturePath) {
+function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
   var geometry = new THREE.PlaneGeometry(width, height, 32);
 
   var texture = new THREE.TextureLoader().load(texturePath);
@@ -318,10 +352,19 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath) {
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set( 4, 4 );
 
-  var material = new THREE.MeshBasicMaterial({
+  var normalMap;
+
+  if (normalMap) {
+    normalMap = new THREE.TextureLoader().load(normalMap);
+  } else {
+    normalMap = null;
+  }
+
+  var material = new THREE.MeshPhongMaterial({
     color: colour,
     side: THREE.DoubleSide,
-    map: texture
+    map: texture,
+    normalMap: normalMap
   });
   var plane = new THREE.Mesh(geometry, material);
   plane.rotateX(-Math.PI / 2);
