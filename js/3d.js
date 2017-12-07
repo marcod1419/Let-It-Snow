@@ -177,7 +177,7 @@ function main() {
 
   //Snow
   var snowGeometry = new THREE.Geometry();
-  var particleCount = 50000;
+  var particleCount = 5000;
 
   for (var i = 0; i < particleCount; i++) {
     var snow = new THREE.Vector3();
@@ -209,9 +209,8 @@ function main() {
     var pCount = particleCount;
     while (pCount--) {
       var particle = snowGeometry.vertices[pCount];
-      var randomStop = -Math.random() * (1200 * 200) + 200;
-      if (particle.y < randomStop) {
-        particle.y = 900;
+      if (particle.y < -50) {
+        particle.y = randomNumber(700,900,0,false);
         particle.velocity.y = 0;
       }
       particle.velocity.y -= Math.random() * (0.005 * 0.001) + 0.001;
@@ -540,9 +539,11 @@ function addToScene(obj){
   }
 }
 
-function randomNumber(min, max, spacing){
-	var num = Math.floor(Math.random()*max) + min + spacing; 
-	num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+function randomNumber(min, max, spacing=0, rollNegative){
+	var num = Math.floor(Math.random() * (max-min)) + min + spacing;
+  if(rollNegative){
+    num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+  } 
 
 	return num;
 }
@@ -552,12 +553,12 @@ function randomNumberArray(minX, maxX, minZ, maxZ, xLimitMin, xLimitMax, zLimitM
 
 
 	for (var i = 0; i < amount; i++){
-		xPos = randomNumber(minX,maxX, spacing);
-		zPos = randomNumber(minZ,maxZ, spacing);
+		xPos = randomNumber(minX,maxX, spacing, true);
+		zPos = randomNumber(minZ,maxZ, spacing, true);
 
 		if (xPos >= xLimitMin && xPos <= xLimitMax){
 			while (zPos >= zLimitMin && zPos <= zLimitMax){
-				zPos = randomNumber(minZ,maxZ, spacing);
+				zPos = randomNumber(minZ,maxZ, spacing, true);
 			}
 		}
 		pos[0].push(xPos);
