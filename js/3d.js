@@ -29,7 +29,7 @@ function main() {
   //Skybox
   scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"]);
 
-  const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
+  const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 50000);
 
   camera.position.set(0, 0, 900);
   camera.lookAt(scene.position);
@@ -77,7 +77,7 @@ function main() {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.15;
   controls.minDistance = 250;
-  controls.maxDistance = 1800;
+  controls.maxDistance = 10000; //Old: 1800
   controls.addEventListener("change", render);
 
   // window.addEventListener("mousedown", function(){
@@ -96,7 +96,7 @@ function main() {
   container.appendChild(renderer.domElement);
 
   //Floor
-  scene.add(createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  scene.add(createCirclePlane(1500, 1500, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Body~
   addToScene(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -122,7 +122,7 @@ function main() {
 
   //Trees
   const treeCount = 30;
-  var treePos = randomNumberArray(-2000, 2000, -2000, 2000, -400, 400, -700, 900, treeCount, 20);
+  var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20);
   for (var i = 0; i < treeCount; i++){
   	addToScene(createTree(30, 300, treePos[0][i] , 0, treePos[1][i]));
   }
@@ -358,30 +358,6 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
   return cone;
 }
 
-function createPointLight(xPos, yPos, zPos, colour, str) {
-  const pointLight = new THREE.PointLight(colour, str);
-
-  pointLight.position.x = xPos;
-  pointLight.position.y = yPos;
-  pointLight.position.z = zPos;
-
-  return pointLight;
-}
-
-function createSpotLight(xPos, yPos, zPos, colour, str) {
-  const spotLight = new THREE.SpotLight(colour, str);
-
-  spotLight.position.x = xPos;
-  spotLight.position.y = yPos;
-  spotLight.position.z = zPos;
-
-  return spotLight;
-}
-
-function setAmbientLight(colour, str) {
-  return new THREE.AmbientLight(colour, str);
-}
-
 function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
   var geometry = new THREE.PlaneGeometry(width, height, 32);
 
@@ -418,6 +394,44 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
     plane.position.z = zPos;
   }
   return plane;
+}
+
+function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, normalMap) {
+  var geometry = new THREE.CircleGeometry(rad, seg, 32);
+
+  var texture = new THREE.TextureLoader().load(texturePath);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(16, 16);
+
+  var normalMap;
+
+  if (normalMap) {
+    normalMap = new THREE.TextureLoader().load(normalMap);
+  } else {
+    normalMap = null;
+  }
+
+  var material = new THREE.MeshPhongMaterial({
+    color: colour,
+    side: THREE.DoubleSide,
+    map: texture,
+    normalMap: normalMap
+  });
+  var circlePlane = new THREE.Mesh(geometry, material);
+  circlePlane.rotateX(-Math.PI / 2);
+  if (xPos) {
+    circlePlane.position.x = xPos;
+  }
+
+  if (yPos) {
+    circlePlane.position.y = yPos;
+  }
+
+  if (zPos) {
+    circlePlane.position.z = zPos;
+  }
+  return circlePlane;
 }
 
 function createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos){
@@ -465,6 +479,31 @@ function createTree(width, height, xPos, yPos, zPos) {
 	// tree.push(createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
 
 	return tree;
+}
+
+
+function createPointLight(xPos, yPos, zPos, colour, str) {
+  const pointLight = new THREE.PointLight(colour, str);
+
+  pointLight.position.x = xPos;
+  pointLight.position.y = yPos;
+  pointLight.position.z = zPos;
+
+  return pointLight;
+}
+
+function createSpotLight(xPos, yPos, zPos, colour, str) {
+  const spotLight = new THREE.SpotLight(colour, str);
+
+  spotLight.position.x = xPos;
+  spotLight.position.y = yPos;
+  spotLight.position.z = zPos;
+
+  return spotLight;
+}
+
+function setAmbientLight(colour, str) {
+  return new THREE.AmbientLight(colour, str);
 }
 
 function degToRad(deg) {
