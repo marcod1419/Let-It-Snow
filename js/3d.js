@@ -101,7 +101,7 @@ function main() {
   //Base
 
   //Glass
-  addToScene(createSphere(1500, 1500, 50, 0xffffff, 0, -60, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false));
+  addToScene(createSphere(1500, 1500, 50, 0xffffff, 0, -100, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
 
   //~Body~
   addToScene(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -274,7 +274,7 @@ function main() {
   }
 }
 
-function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, normalMap, alphaMap, envMap, refractionRatio, depthWrite=true, wireframeEnabled=false) {
+function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, normalMap, alphaMap, envMap, refractionRatio, depthWrite=true, wireframeEnabled=false, isGlobeGlass=false) {
   const RADIUS = rad;
   const SEGMENTS = seg;
   const RINGS = ring;
@@ -310,7 +310,13 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
   sphereMaterial.depthWrite = depthWrite;
   sphereMaterial.wireframe = wireframeEnabled;
 
-  const sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS), sphereMaterial);
+  var sphere;
+  if(isGlobeGlass){
+    sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS, 0, Math.PI*2,degToRad(0),degToRad(90)), sphereMaterial);
+  }
+  else{
+    sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS), sphereMaterial);
+  }
 
   if (xPos) {
     sphere.position.x = xPos;
