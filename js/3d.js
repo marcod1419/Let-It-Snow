@@ -311,6 +311,9 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
   var material;
   if(texturePath){
   	var texture = new THREE.TextureLoader().load(texturePath);
+    // texture.wrapS = THREE.RepeatWrapping;
+    // texture.wrapT = THREE.RepeatWrapping;
+    // texture.repeat.set(16, 16);
 	  var normalMap;
 
 	  if (normalMap) {
@@ -417,9 +420,25 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   return plane;
 }
 
-function createCylinder(radTop, radBottom, height, colour, texture, normalMap, xPos, yPos, zPos){
+function createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos){
 	var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 50, 50);
-	var cylinderMaterial = new THREE.MeshPhongMaterial({color: colour});
+  var cylinderMaterial;
+
+  if(texturePath){
+    var texture = new THREE.TextureLoader().load(texturePath);
+    var normalMap;
+
+    if (normalMap) {
+      normalMap = new THREE.TextureLoader().load(normalMap);
+    } else {
+      normalMap = null;
+    }
+     cylinderMaterial = new THREE.MeshPhongMaterial({color: colour, map: texture, normalMap: normalMap});
+  }
+  else{
+     cylinderMaterial = new THREE.MeshPhongMaterial({color: colour});
+  }
+
 	var cylinder = new THREE.Mesh(cylinderGeo, cylinderMaterial);
 
 	if (xPos) {
@@ -440,9 +459,9 @@ function createCylinder(radTop, radBottom, height, colour, texture, normalMap, x
 function createTree(width, height, xPos, yPos, zPos) {
 	var tree = [];
 
-	tree.push(createCylinder(width, width, height, 0x593c2f, "", "", xPos, yPos, zPos));
-	tree.push(createCone(width*4, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.5, zPos, 0, 0, 0, "", ""));
-	tree.push(createCone(width*4.5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.2, zPos, 0, 0, 0, "", ""));
+	tree.push(createCylinder(width, width, height, 0x593c2f, "img/trunk.jpg", "img/trunk_normal.png", xPos, yPos, zPos));
+	tree.push(createCone(width*4, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.5, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png"));
+	tree.push(createCone(width*4.5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.2, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png"));
 	// tree.push(createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
 
 	return tree;
