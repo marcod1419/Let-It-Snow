@@ -315,28 +315,23 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
 
 function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap) {
   var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
-  var material;
-  if(texturePath){
-  	var texture = new THREE.TextureLoader().load(texturePath);
-    // texture.wrapS = THREE.RepeatWrapping;
-    // texture.wrapT = THREE.RepeatWrapping;
-    // texture.repeat.set(16, 16);
-	  var normalMap;
 
-	  if (normalMap) {
-	    normalMap = new THREE.TextureLoader().load(normalMap);
-	  } else {
-	    normalMap = null;
-	  }
-	   material = new THREE.MeshPhongMaterial({color: colour, map: texture, normalMap: normalMap});
-  }
-  else{
-	   material = new THREE.MeshPhongMaterial({color: colour});
+  var coneMaterial = new THREE.MeshPhongMaterial({});
+
+  if(colour !== null){
+    coneMaterial.color = new THREE.Color(colour);
   }
 
- 
+  if(texturePath !== null){
+    var texture = new THREE.TextureLoader().load(texturePath);
+    coneMaterial.map = texture;
+  }
 
-  const cone = new THREE.Mesh(geometry, material);
+  if(normalMap !== null){
+    coneMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
+  }
+
+  const cone = new THREE.Mesh(geometry, coneMaterial);
 
   if (xPos) {
     cone.position.x = xPos;
@@ -368,26 +363,22 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
 function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
   var geometry = new THREE.PlaneGeometry(width, height, 32);
 
-  var texture = new THREE.TextureLoader().load(texturePath);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(16, 16);
+  var planeMaterial = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
 
-  var normalMap;
-
-  if (normalMap) {
-    normalMap = new THREE.TextureLoader().load(normalMap);
-  } else {
-    normalMap = null;
+  if(colour !== null){
+    planeMaterial.color = new THREE.Color(colour);
   }
 
-  var material = new THREE.MeshPhongMaterial({
-    color: colour,
-    side: THREE.DoubleSide,
-    map: texture,
-    normalMap: normalMap
-  });
-  var plane = new THREE.Mesh(geometry, material);
+  if(texturePath !== null){
+    var texture = new THREE.TextureLoader().load(texturePath);
+    planeMaterial.map = texture;
+  }
+
+  if(normalMap !== null){
+    planeMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
+  }
+
+  var plane = new THREE.Mesh(geometry, planeMaterial);
   plane.rotateX(-Math.PI / 2);
   if (xPos) {
     plane.position.x = xPos;
@@ -406,26 +397,27 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
 function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, normalMap) {
   var geometry = new THREE.CircleGeometry(rad, seg, 32);
 
-  var texture = new THREE.TextureLoader().load(texturePath);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(16, 16);
+ 
+  var circlePlaneMaterial = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
 
-  var normalMap;
-
-  if (normalMap) {
-    normalMap = new THREE.TextureLoader().load(normalMap);
-  } else {
-    normalMap = null;
+  if(colour !== null){
+    circlePlaneMaterial.color = new THREE.Color(colour);
   }
 
-  var material = new THREE.MeshPhongMaterial({
-    color: colour,
-    side: THREE.DoubleSide,
-    map: texture,
-    normalMap: normalMap
-  });
-  var circlePlane = new THREE.Mesh(geometry, material);
+  if(texturePath !== null){
+     var texture = new THREE.TextureLoader().load(texturePath);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(16, 16);
+    circlePlaneMaterial.map = texture;
+  }
+
+  if(normalMap !== null){
+    circlePlaneMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
+  }
+
+  var circlePlane = new THREE.Mesh(geometry, circlePlaneMaterial);
+
   circlePlane.rotateX(-Math.PI / 2);
   if (xPos) {
     circlePlane.position.x = xPos;
@@ -443,22 +435,22 @@ function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, norm
 
 function createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos){
 	var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 50, 50);
-  var cylinderMaterial;
 
-  if(texturePath){
+  var cylinderMaterial = new THREE.MeshPhongMaterial({});
+
+  if(colour !== null){
+    cylinderMaterial.color = new THREE.Color(colour);
+  }
+
+  if(texturePath !== null){
     var texture = new THREE.TextureLoader().load(texturePath);
-    var normalMap;
+    cylinderMaterial.map = texture;
+  }
 
-    if (normalMap) {
-      normalMap = new THREE.TextureLoader().load(normalMap);
-    } else {
-      normalMap = null;
-    }
-     cylinderMaterial = new THREE.MeshPhongMaterial({color: colour, map: texture, normalMap: normalMap});
+  if(normalMap !== null){
+    cylinderMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
   }
-  else{
-     cylinderMaterial = new THREE.MeshPhongMaterial({color: colour});
-  }
+
 
 	var cylinder = new THREE.Mesh(cylinderGeo, cylinderMaterial);
 
