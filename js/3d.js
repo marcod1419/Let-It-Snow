@@ -11,8 +11,8 @@ function main() {
     camera.updateProjectionMatrix();
   });
 
-  var objects = [];
-  var lights = [];
+  this.objects = [];
+  this.lights = [];
 
   // Get the DOM element to attach to
   const container = document.querySelector("#container");
@@ -44,6 +44,7 @@ function main() {
     this.pointLights = true;
     this.ambientLight = true;
     this.ambientLightStrength = 0.9;
+    // this.snowAmount = 10000;
     this.fun = function() {
       console.log("BOOM!");
     };
@@ -59,6 +60,7 @@ function main() {
     gui.add(this.settings, "pointLights");
     gui.add(this.settings, "ambientLight");
     gui.add(this.settings, "ambientLightStrength", 0.1, 2);
+    // gui.add(this.settings, "snowAmount", 0, 10000);
     gui.add(this.settings, "fun");
     render();
     animate();
@@ -97,28 +99,33 @@ function main() {
   scene.add(createPlane(5000, 5000, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Body~
-  objects.push(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  objects.push(createSphere(40, 50, 50, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  objects.push(createSphere(30, 50, 50, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createSphere(40, 50, 50, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createSphere(30, 50, 50, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Face~
 
   //Eyes
-  objects.push(createSphere(2, 50, 50, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
-  objects.push(createSphere(2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
 
   //Nose
-  objects.push(createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png"));
+  addToScene(createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png"));
 
   //Mouth
-  objects.push(createSphere(2, 50, 50, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-  objects.push(createSphere(2, 50, 50, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
-  objects.push(createSphere(2, 50, 50, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-  objects.push(createSphere(2, 50, 50, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-  objects.push(createSphere(2, 50, 50, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-  objects.push(createSphere(2, 50, 50, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 50, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
 
   //Trees
+  const treeCount = 30;
+  var treePos = randomNumberArray(-2000, 2000, -2000, 2000, -400, 400, -700, 900, treeCount, 20);
+  for (var i = 0; i < treeCount; i++){
+  	addToScene(createTree(30, 300, treePos[0][i] , 0, treePos[1][i]));
+  }
 
   //Text
   var loader = new THREE.FontLoader();
@@ -150,17 +157,17 @@ function main() {
   }
 
   //Lights
-  lights.push(createPointLight(-100, 100, -130, 0xff0000, 0.3));
-  lights.push(createPointLight(100, 100, -130, 0x00ff00, 0.3));
-  lights.push(createPointLight(0, 0, -400, 0x0000ff, 0.5));
+  this.lights.push(createPointLight(-100, 100, -130, 0xff0000, 0.3));
+  this.lights.push(createPointLight(100, 100, -130, 0x00ff00, 0.3));
+  this.lights.push(createPointLight(0, 0, -400, 0x0000ff, 0.5));
 
-  lights.push(setAmbientLight(0xb5f1ff, 0.9));
+  this.lights.push(setAmbientLight(0xb5f1ff, 0.9));
 
-  var cameraLight = createPointLight(0, 0, 0, 0xffffff, 0.8); //0.8 = on
+  var cameraLight = createPointLight(0, 0, 0, 0xffffff, 0.8);
   camera.add(cameraLight);
 
-  for (var i = 0; i < lights.length; i++) {
-    scene.add(lights[i]);
+  for (var i = 0; i < this.lights.length; i++) {
+    scene.add(this.lights[i]);
   }
 
   //Snow
@@ -223,31 +230,31 @@ function main() {
     }
 
     if (this.settings.pointLights) {
-      for (var i = 0; i < lights.length; i++) {
-        if (lights[i].type !== "AmbientLight") {
-          lights[i].visible = true;
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type !== "AmbientLight") {
+          this.lights[i].visible = true;
         }
       }
     } else {
-      for (var i = 0; i < lights.length; i++) {
-        if (lights[i].type !== "AmbientLight") {
-          lights[i].visible = false;
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type !== "AmbientLight") {
+          this.lights[i].visible = false;
         }
       }
     }
 
     if (this.settings.ambientLight) {
-      for (var i = 0; i < lights.length; i++) {
-        if (lights[i].type === "AmbientLight") {
-          lights[i].visible = true;
-          lights[i].intensity = this.settings.ambientLightStrength;
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type === "AmbientLight") {
+          this.lights[i].visible = true;
+          this.lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
     } else {
-      for (var i = 0; i < lights.length; i++) {
-        if (lights[i].type === "AmbientLight") {
-          lights[i].visible = false;
-          lights[i].intensity = this.settings.ambientLightStrength;
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type === "AmbientLight") {
+          this.lights[i].visible = false;
+          this.lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
     }
@@ -301,16 +308,23 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
 
 function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap) {
   var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
-  var texture = new THREE.TextureLoader().load(texturePath);
-  var normalMap;
+  var material;
+  if(texturePath){
+  	var texture = new THREE.TextureLoader().load(texturePath);
+	  var normalMap;
 
-  if (normalMap) {
-    normalMap = new THREE.TextureLoader().load(normalMap);
-  } else {
-    normalMap = null;
+	  if (normalMap) {
+	    normalMap = new THREE.TextureLoader().load(normalMap);
+	  } else {
+	    normalMap = null;
+	  }
+	   material = new THREE.MeshPhongMaterial({color: colour, map: texture, normalMap: normalMap});
+  }
+  else{
+	   material = new THREE.MeshPhongMaterial({color: colour});
   }
 
-  var material = new THREE.MeshPhongMaterial({color: colour, map: texture, normalMap: normalMap});
+ 
 
   const cone = new THREE.Mesh(geometry, material);
 
@@ -403,10 +417,78 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   return plane;
 }
 
-function createTree(width, height, xPos, yPos, zPos) {}
+function createCylinder(radTop, radBottom, height, colour, texture, normalMap, xPos, yPos, zPos){
+	var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 50, 50);
+	var cylinderMaterial = new THREE.MeshPhongMaterial({color: colour});
+	var cylinder = new THREE.Mesh(cylinderGeo, cylinderMaterial);
+
+	if (xPos) {
+    	cylinder.position.x = xPos;
+	}
+
+	if (yPos) {
+	    cylinder.position.y = yPos;
+	}
+
+	if (zPos) {
+	    cylinder.position.z = zPos;
+	 }
+
+	 return cylinder;
+}
+
+function createTree(width, height, xPos, yPos, zPos) {
+	var tree = [];
+
+	tree.push(createCylinder(width, width, height, 0x593c2f, "", "", xPos, yPos, zPos));
+	tree.push(createCone(width*4, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.5, zPos, 0, 0, 0, "", ""));
+	tree.push(createCone(width*4.5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.2, zPos, 0, 0, 0, "", ""));
+	// tree.push(createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
+
+	return tree;
+}
 
 function degToRad(deg) {
   return deg * (Math.PI / 180);
+}
+
+function addToScene(obj){
+  if(obj.constructor === Array){
+    for (var i = 0; i < obj.length; i++){
+      this.objects.push(obj[i]);
+    }
+  }
+  else{
+    this.objects.push(obj);
+  }
+}
+
+function randomNumber(min, max, spacing){
+	var num = Math.floor(Math.random()*max) + min + spacing; 
+	num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+
+	return num;
+}
+
+function randomNumberArray(minX, maxX, minZ, maxZ, xLimitMin, xLimitMax, zLimitMin, zLimitMax, amount, spacing){
+	var pos = [[],[]];
+
+
+	for (var i = 0; i < amount; i++){
+		xPos = randomNumber(minX,maxX, spacing);
+		zPos = randomNumber(minZ,maxZ, spacing);
+
+		if (xPos >= xLimitMin && xPos <= xLimitMax){
+			while (zPos >= zLimitMin && zPos <= zLimitMax){
+				zPos = randomNumber(minZ,maxZ, spacing);
+			}
+		}
+		pos[0].push(xPos);
+		pos[1].push(zPos);
+
+	}
+
+	return pos;
 }
 
 main();
