@@ -96,7 +96,12 @@ function main() {
   container.appendChild(renderer.domElement);
 
   //Floor
-  scene.add(createCirclePlane(1500, 1500, 0xffffff, 0, -100, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+
+  //Base
+
+  //Glass
+  addToScene(createSphere(1500, 1500, 50, 0x00ff00, 0, -60, 0, null, null, true));
 
   //~Body~
   addToScene(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -124,7 +129,7 @@ function main() {
   const treeCount = 30;
   var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20);
   for (var i = 0; i < treeCount; i++){
-  	addToScene(createTree(30, 300, treePos[0][i] , 0, treePos[1][i]));
+  	addToScene(createTree(30, 220, treePos[0][i] , 0, treePos[1][i]));
   }
 
   //Text
@@ -172,7 +177,7 @@ function main() {
 
   //Snow
   var snowGeometry = new THREE.Geometry();
-  var particleCount = 10000;
+  var particleCount = 50000;
 
   for (var i = 0; i < particleCount; i++) {
     var snow = new THREE.Vector3();
@@ -269,25 +274,27 @@ function main() {
   }
 }
 
-function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, normalMap) {
+function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, normalMap, wireframeEnabled=false) {
   const RADIUS = rad;
   const SEGMENTS = seg;
   const RINGS = ring;
 
-  var texture = new THREE.TextureLoader().load(texturePath);
-  var normalMap;
+  var sphereMaterial = new THREE.MeshPhongMaterial({});
 
-  if (normalMap) {
-    normalMap = new THREE.TextureLoader().load(normalMap);
-  } else {
-    normalMap = null;
+  if(colour !== null){
+    sphereMaterial.color = new THREE.Color(colour);
   }
 
-  const sphereMaterial = new THREE.MeshPhongMaterial({
-    color: colour,
-    map: texture,
-    normalMap: normalMap
-  });
+  if(texturePath !== null){
+    var texture = new THREE.TextureLoader().load(texturePath);
+    sphereMaterial.map = texture;
+  }
+
+  if(normalMap !== null){
+    sphereMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
+  }
+
+  sphereMaterial.wireframe = wireframeEnabled;
 
   const sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS), sphereMaterial);
 
