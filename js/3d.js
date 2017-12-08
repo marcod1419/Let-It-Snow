@@ -24,7 +24,7 @@ function main() {
   //Skybox
   scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
 
-  const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 50000);
+  const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500000);
 
   camera.position.set(0, 0, 900);
   camera.lookAt(scene.position);
@@ -81,6 +81,9 @@ function main() {
 
   //Floor
   addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+
+  //Table
+  addToScene(createBox(50000,100,20000,0xffffff,"img/desk.png",null,-15000,-395,-300));
 
   //Base
   addToScene(createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
@@ -546,7 +549,7 @@ function createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yP
 
   var hiddenMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
 
-  var baseMaterials = [cylinderMaterial, hiddenMaterial, cylinderMaterial];
+  var baseMaterials = [cylinderMaterial, hiddenMaterial, hiddenMaterial];
 
 
   var cylinder = new THREE.Mesh(cylinderGeo, baseMaterials);
