@@ -37,9 +37,17 @@ function main() {
     this.cameraAutoRotateSpeed = 0.15;
     this.flashlight = false;
     this.flashlightStrength = 0.8;
-    this.pointLights = true;
+    this.spotLights = true;
+    this.roomLight = true;
+    this.roomLightStrength = 0.2;
     this.ambientLight = true;
     this.ambientLightStrength = 0.9;
+    this.x1 = 16054;
+    this.y1 = 10000;
+    this.z1 = 0;
+    this.x2 = 0;
+    this.y2 = 0;
+    this.z2 = 0;
     // this.snowAmount = 10000;
     this.fun = function() {
       console.log("BOOM!");
@@ -53,12 +61,21 @@ function main() {
     gui.add(this.settings, "cameraAutoRotateSpeed", 0.15, 5);
     gui.add(this.settings, "flashlight");
     gui.add(this.settings, "flashlightStrength", 0.1, 2);
-    gui.add(this.settings, "pointLights");
+    gui.add(this.settings, "spotLights");
     gui.add(this.settings, "ambientLight");
     gui.add(this.settings, "ambientLightStrength", 0.1, 2);
+    gui.add(this.settings, "roomLight");
+    gui.add(this.settings, "roomLightStrength", 0.1, 2);
+    gui.add(this.settings, "x1", 0, 100000);
+    gui.add(this.settings, "y1", 0, 100000);
+    gui.add(this.settings, "z1", 0, 100000);
+    gui.add(this.settings, "x2", 0, 10000);
+    gui.add(this.settings, "y2", 0, 10000);
+    gui.add(this.settings, "z2", 0, 10000);
+
 
     // gui.add(this.settings, "snowAmount", 0, 10000);
-    gui.add(this.settings, "fun");
+    // gui.add(this.settings, "fun");
     render();
     animate();
   };
@@ -152,10 +169,12 @@ function main() {
   }
 
   //Lights
-  this.lights.push(createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20,-126, -354, 293, 223, -5));
-  this.lights.push(createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20,-126, -354, -293, 223, -5));
-  this.lights.push(createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0,0, -340, -35,314,-521));
+  this.lights.push(createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20,-126, -354, 293, 223, -5, 256, 256));
+  this.lights.push(createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20,-126, -354, -293, 223, -5, 256, 256));
+  this.lights.push(createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0,0, -340, -35,314,-521, 256, 256));
   // scene.add(new THREE.SpotLightHelper(this.lights[1]));
+
+  this.lights.push(createSpotLight(0xffffff, 0.2, 1000000, 50, 2, 0.5, 0, 0, 0, 6300,11719, 9551, 4096, 4096, "RoomLight"));
 
   this.lights.push(setAmbientLight(0xb5f1ff, 0.9));
 
@@ -230,26 +249,56 @@ function main() {
         }
       }
 
+    // lights[3].position.x = this.settings.x1;
+    // lights[3].position.y = this.settings.y1;
+    // lights[3].position.z = this.settings.z1;
+    // lights[3].target.position.x = this.settings.x2;
+    // lights[3].target.position.y = this.settings.y2;
+    // lights[3].target.position.z = this.settings.z2;
+
+
     controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
     controls.autoRotate = this.settings.cameraAutoRotate;
 
 
     if (this.settings.flashlight) {
       cameraLight.intensity = this.settings.flashlightStrength;
-    } else {
+    } 
+
+    else {
       cameraLight.intensity = 0;
     }
 
-    if (this.settings.pointLights) {
+    if (this.settings.spotLights) {
       for (var i = 0; i < this.lights.length; i++) {
-        if (this.lights[i].type !== "AmbientLight") {
+        if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
           this.lights[i].visible = true;
         }
       }
-    } else {
+    } 
+
+    else {
       for (var i = 0; i < this.lights.length; i++) {
-        if (this.lights[i].type !== "AmbientLight") {
+        if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
           this.lights[i].visible = false;
+        }
+      }
+    }
+
+    if (this.settings.roomLight){
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].name === "RoomLight") {
+          this.lights[i].visible = true;
+          this.lights[i].intensity = this.settings.roomLightStrength
+        }
+      }
+    }
+
+    else{
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].name === "RoomLight") {
+          this.lights[i].visible = false;
+          this.lights[i].intensity = this.settings.roomLightStrength
         }
       }
     }
@@ -261,7 +310,9 @@ function main() {
           this.lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
-    } else {
+    } 
+
+    else {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "AmbientLight") {
           this.lights[i].visible = false;
@@ -337,7 +388,7 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
   }
 
   sphere.castShadow = true;
-  sphere.receiveShadow = true;
+  sphere.receiveShadow = false;
 
   return sphere;
 }
@@ -386,6 +437,9 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
     cone.rotation.z = degToRad(zRot);
   }
 
+  cone.castShadow = true;
+  cone.receiveShadow = true;
+
   return cone;
 }
 
@@ -419,6 +473,9 @@ function createBox(width, height, depth, colour, texturePath, normalMap, xPos, y
   if (zPos) {
     box.position.z = zPos;
   }
+  box.castShadow = true;
+  box.receiveShadow = true;
+
   return box;
 }
 
@@ -533,6 +590,9 @@ function createCylinder(radTop, radBottom, height, colour, texturePath, normalMa
 	    cylinder.position.z = zPos;
 	 }
 
+  cylinder.castShadow = true;
+  cylinder.receiveShadow = true;
+
 	 return cylinder;
 }
 
@@ -584,27 +644,36 @@ function createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yP
       cylinder.position.z = zPos;
    }
 
-   return cylinder;
+  cylinder.castShadow = true;
+  cylinder.receiveShadow = true;
+
+  return cylinder;
 }
 
 
 function createPointLight(colour, str, xPos, yPos, zPos) {
-  const pointLight = new THREE.PointLight(colour, str);
+  var pointLight = new THREE.PointLight(colour, str);
 
-  pointLight.position.x = xPos;
-  pointLight.position.y = yPos;
-  pointLight.position.z = zPos;
+  if(xPos && yPos && zPos){
+    pointLight.target.position.set(xPos,yPos,zPos);
+  }
+
+  pointLight.castShadow = true;
+  pointLight.shadow.mapSize.width = 256;
+  pointLight.shadow.mapSize.height = 256;
+  pointLight.shadow.camera.near = 0.5;
+  pointLight.shadow.camera.far = 5000;
 
   return pointLight;
 }
 
-function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, zPos, xRot, yRot, zRot) {
-  const spotLight = new THREE.SpotLight(colour, str, distance, degToRad(angle), blur, decay);
+function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, zPos, xRot, yRot, zRot, shadowW, shadowH, name="") {
+  var spotLight = new THREE.SpotLight(colour, str, distance, degToRad(angle), blur, decay);
   spotLight.castShadow = true;
-  spotLight.shadow.mapSize.width = 256;
-  spotLight.shadow.mapSize.height = 256;
+  spotLight.shadow.mapSize.width = shadowW;
+  spotLight.shadow.mapSize.height = shadowH;
   spotLight.shadow.camera.near = 0.5;
-  spotLight.shadow.camera.far = 500;
+  spotLight.shadow.camera.far = 5000;
 
   if(xPos && yPos && zPos){
     spotLight.target.position.set(xPos,yPos,zPos);
@@ -612,8 +681,29 @@ function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, 
   if(xRot && yRot && zRot){
     spotLight.position.set(xRot, yRot, zRot);
   }
+
+  spotLight.name = name;
   
   return spotLight;
+}
+
+function createDirectionalLight(colour, str, zPos, yPos, zPos, xRot, yRot, zRot){
+  var directionalLight = new THREE.DirectionalLight( colour, str);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.width = 256;
+  directionalLight.shadow.mapSize.height = 256;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 5000;
+
+  if(xPos && yPos && zPos){
+    directionalLight.target.position.set(xPos,yPos,zPos);
+  }
+
+  if(xRot && yRot && zRot){
+    directionalLight.position.set(xRot, yRot, zRot);
+  }
+
+  return directionalLight;
 }
 
 function setAmbientLight(colour, str) {
