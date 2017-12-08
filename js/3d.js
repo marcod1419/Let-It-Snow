@@ -17,7 +17,8 @@ function main() {
   const container = document.querySelector("#container");
 
   const renderer = new THREE.WebGLRenderer({antialias: true});
-
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows
   const scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb5f1ff);
 
@@ -55,6 +56,7 @@ function main() {
     gui.add(this.settings, "pointLights");
     gui.add(this.settings, "ambientLight");
     gui.add(this.settings, "ambientLightStrength", 0.1, 2);
+
     // gui.add(this.settings, "snowAmount", 0, 10000);
     gui.add(this.settings, "fun");
     render();
@@ -83,7 +85,7 @@ function main() {
   addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //Table
-  addToScene(createBox(50000,100,20000,0xffffff,"img/desk.png",null,-15000,-395,-300));
+  addToScene(createBox(50000,800,20000,0xffffff,"img/desk.png",null,-15000,-695,-300));
 
   //Base
   addToScene(createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
@@ -150,13 +152,14 @@ function main() {
   }
 
   //Lights
-  this.lights.push(createPointLight(-100, 100, -130, 0xff0000, 0.3));
-  this.lights.push(createPointLight(100, 100, -130, 0x00ff00, 0.3));
-  this.lights.push(createPointLight(0, 0, -400, 0x0000ff, 0.5));
+  this.lights.push(createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20,-126, -354, 293, 223, -5));
+  this.lights.push(createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20,-126, -354, -293, 223, -5));
+  this.lights.push(createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0,0, -340, -35,314,-521));
+  // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
   this.lights.push(setAmbientLight(0xb5f1ff, 0.9));
 
-  var cameraLight = createPointLight(0, 0, 0, 0xffffff, 0.8);
+  var cameraLight = createPointLight(0xffffff, 0.8, 0, 0, 0);
   camera.add(cameraLight);
 
   for (var i = 0; i < this.lights.length; i++) {
@@ -221,8 +224,15 @@ function main() {
 
     snowFall.geometry.verticesNeedUpdate = true;
 
+    for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type === "SpotLight") {
+          this.lights[i].target.updateMatrixWorld();
+        }
+      }
+
     controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
     controls.autoRotate = this.settings.cameraAutoRotate;
+
 
     if (this.settings.flashlight) {
       cameraLight.intensity = this.settings.flashlightStrength;
@@ -570,7 +580,7 @@ function createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yP
 }
 
 
-function createPointLight(xPos, yPos, zPos, colour, str) {
+function createPointLight(colour, str, xPos, yPos, zPos) {
   const pointLight = new THREE.PointLight(colour, str);
 
   pointLight.position.x = xPos;
@@ -580,13 +590,13 @@ function createPointLight(xPos, yPos, zPos, colour, str) {
   return pointLight;
 }
 
-function createSpotLight(xPos, yPos, zPos, colour, str) {
-  const spotLight = new THREE.SpotLight(colour, str);
+function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, zPos, xRot, yRot, zRot) {
+  const spotLight = new THREE.SpotLight(colour, str, distance, degToRad(angle), blur, decay);
+  spotLight.castShadow = true;
 
-  spotLight.position.x = xPos;
-  spotLight.position.y = yPos;
-  spotLight.position.z = zPos;
-
+  spotLight.target.position.set(xPos,yPos,zPos);
+  spotLight.position.set(xRot, yRot, zRot);
+  
   return spotLight;
 }
 
