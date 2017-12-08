@@ -128,7 +128,7 @@ function main() {
 
   //Trees
   const treeCount = 30;
-  var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20);
+  var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
   for (var i = 0; i < treeCount; i++){
   	addToScene(createTree(30, 220, treePos[0][i] , 0, treePos[1][i]));
   }
@@ -138,7 +138,7 @@ function main() {
   loader.load("fonts/Heartbeat_in_Christmas_Regular.json", function(font) {
     var textGeo = new THREE.TextGeometry("Happy Holidays", {
       font: font,
-      size: 100,
+      size: 400,
       height: 10,
       curveSegments: 12,
       bevelEnabled: false,
@@ -154,7 +154,7 @@ function main() {
 
     var textMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, map: texture});
     var textMesh = new THREE.Mesh(textGeo, textMaterial);
-    textMesh.position.set(-200, 150, -305);
+    textMesh.position.set(-900, 700, -305);
     scene.add(textMesh);
   });
 
