@@ -27,7 +27,7 @@ function main() {
   // scene.background = new THREE.Color(0xb5f1ff);
 
   //Skybox
-  scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall.png", "wall.png", "3.png", "floor.png", "wall.png", "wall.png"]);
+  scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
 
   const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 50000);
 
@@ -69,7 +69,7 @@ function main() {
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   var rotateReset;
   controls.rotateSpeed = 1.0;
-  controls.zoomSpeed = 1.2;
+  controls.zoomSpeed = 1.5;
   controls.enablePan = false;
   controls.target.set(0, 50, -300);
   controls.enableDamping = true;
@@ -99,6 +99,7 @@ function main() {
   addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //Base
+  addToScene(createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
 
   //Glass
   addToScene(createSphere(1500, 1500, 50, 0xffffff, 0, -100, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
@@ -177,13 +178,18 @@ function main() {
 
   //Snow
   var snowGeometry = new THREE.Geometry();
-  var particleCount = 5000;
+  var particleCount = 10000;
 
   for (var i = 0; i < particleCount; i++) {
     var snow = new THREE.Vector3();
-    snow.x = THREE.Math.randFloatSpread(1650);
-    snow.y = THREE.Math.randFloatSpread(2000);
-    snow.z = THREE.Math.randFloatSpread(1650);
+
+    var distance = 1400;
+    var theta = THREE.Math.randFloatSpread(360);
+    var phi = THREE.Math.randFloatSpread(360);
+
+    snow.x = distance * Math.sin(theta) * Math.cos(phi);
+    snow.y = distance * Math.sin(theta) * Math.sin(phi);
+    snow.z = distance * Math.cos(theta);
 
     snow.velocity = new THREE.Vector3(0, -Math.random(), 0);
 
@@ -210,10 +216,14 @@ function main() {
     while (pCount--) {
       var particle = snowGeometry.vertices[pCount];
       if (particle.y < -50) {
-        particle.y = randomNumber(700,900,0,false);
-        particle.velocity.y = 0;
+        theta = THREE.Math.randFloatSpread(360);
+        phi = THREE.Math.randFloatSpread(360);
+        particle.x = distance * Math.sin(theta) * Math.cos(phi);
+        particle.y = distance * Math.sin(theta) * Math.sin(phi);
+        particle.z = distance * Math.cos(theta);
+        particle.velocity.y = -0.8;
       }
-      particle.velocity.y -= Math.random() * (0.005 * 0.001) + 0.001;
+      particle.velocity.y -= 0.01;
 
       particle.add(particle.velocity);
     }
@@ -497,6 +507,46 @@ function createTree(width, height, xPos, yPos, zPos) {
 	// tree.push(createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
 
 	return tree;
+}
+
+function createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yPos, zPos){
+  var cylinderGeo = new THREE.CylinderGeometry(width, width, height, 50, 50);
+
+  var cylinderMaterial = new THREE.MeshPhongMaterial({});
+
+  if(colour != null){
+    cylinderMaterial.color = new THREE.Color(colour);
+  }
+
+  if(texturePath != null){
+    var texture = new THREE.TextureLoader().load(texturePath);
+    cylinderMaterial.map = texture;
+  }
+
+  if(normalMap != null){
+    cylinderMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
+  }
+
+  var hiddenMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
+
+  var baseMaterials = [cylinderMaterial, hiddenMaterial, cylinderMaterial];
+
+
+  var cylinder = new THREE.Mesh(cylinderGeo, baseMaterials);
+
+  if (xPos) {
+      cylinder.position.x = xPos;
+  }
+
+  if (yPos) {
+      cylinder.position.y = yPos;
+  }
+
+  if (zPos) {
+      cylinder.position.z = zPos;
+   }
+
+   return cylinder;
 }
 
 
