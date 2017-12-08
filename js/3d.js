@@ -16,9 +16,9 @@ function main() {
 
   const container = document.querySelector("#container");
 
-  const renderer = new THREE.WebGLRenderer({antialias: true});
+  var renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap consider changing shadow res
   const scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb5f1ff);
 
@@ -94,26 +94,26 @@ function main() {
   addToScene(createSphere(1500, 1500, 50, 0xffffff, 0, -100, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
 
   //~Body~
-  addToScene(createSphere(60, 50, 50, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  addToScene(createSphere(40, 50, 50, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  addToScene(createSphere(30, 50, 50, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createSphere(60, 50, 16, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createSphere(40, 50, 16, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  addToScene(createSphere(30, 50, 16, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Face~
 
   //Eyes
-  addToScene(createSphere(2, 50, 50, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 50, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
 
   //Nose
   addToScene(createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png"));
 
   //Mouth
-  addToScene(createSphere(2, 50, 50, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 50, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 50, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 50, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 50, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 50, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  addToScene(createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
 
   //Trees
   const treeCount = 30;
@@ -336,6 +336,9 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
     sphere.position.z = zPos;
   }
 
+  sphere.castShadow = true;
+  sphere.receiveShadow = true;
+
   return sphere;
 }
 
@@ -450,11 +453,14 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   if (zPos) {
     plane.position.z = zPos;
   }
+
+  plane.receiveShadow = true;
+
   return plane;
 }
 
 function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, normalMap) {
-  var geometry = new THREE.CircleGeometry(rad, seg, 32);
+  var geometry = new THREE.CircleGeometry(rad, seg, 16); //TODO: Add sides param to function
 
  
   var circlePlaneMaterial = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
@@ -489,11 +495,13 @@ function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, norm
   if (zPos) {
     circlePlane.position.z = zPos;
   }
+
+  circlePlane.receiveShadow = true;
   return circlePlane;
 }
 
 function createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos){
-	var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 50, 50);
+	var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 16, 16); //TODO: Add sides param to function
 
   var cylinderMaterial = new THREE.MeshPhongMaterial({});
 
@@ -593,9 +601,17 @@ function createPointLight(colour, str, xPos, yPos, zPos) {
 function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, zPos, xRot, yRot, zRot) {
   const spotLight = new THREE.SpotLight(colour, str, distance, degToRad(angle), blur, decay);
   spotLight.castShadow = true;
+  spotLight.shadow.mapSize.width = 256;
+  spotLight.shadow.mapSize.height = 256;
+  spotLight.shadow.camera.near = 0.5;
+  spotLight.shadow.camera.far = 500;
 
-  spotLight.target.position.set(xPos,yPos,zPos);
-  spotLight.position.set(xRot, yRot, zRot);
+  if(xPos && yPos && zPos){
+    spotLight.target.position.set(xPos,yPos,zPos);
+  }
+  if(xRot && yRot && zRot){
+    spotLight.position.set(xRot, yRot, zRot);
+  }
   
   return spotLight;
 }
