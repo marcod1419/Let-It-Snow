@@ -1,5 +1,5 @@
 function main() {
-  // Set the scene size.
+  //Scene size
   var windowWidth = window.innerWidth;
   var windowHeight = window.innerHeight;
 
@@ -14,14 +14,9 @@ function main() {
   this.objects = [];
   this.lights = [];
 
-  // Get the DOM element to attach to
   const container = document.querySelector("#container");
 
-  // Create a WebGL renderer, camera
-  // and a scene
   const renderer = new THREE.WebGLRenderer({antialias: true});
-
-  //Create Scene
 
   const scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb5f1ff);
@@ -77,22 +72,11 @@ function main() {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.15;
   controls.minDistance = 250;
-  controls.maxDistance = 30000; //Old: 1800
+  controls.maxDistance = 30000;
   controls.addEventListener("change", render);
 
-  // window.addEventListener("mousedown", function(){
-  //   clearTimeout(rotateReset);
-  //   controls.autoRotate = false;
-  //   rotateReset = setTimeout(function(){
-  //     controls.autoRotate = true;
-  //   }, 5000);
-  // });
-
-  // Start the renderer.
+  //Initialize renderer
   renderer.setSize(windowWidth, windowHeight);
-
-  // Attach the renderer-supplied
-  // DOM element.
   container.appendChild(renderer.domElement);
 
   //Floor
@@ -387,6 +371,39 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
   }
 
   return cone;
+}
+
+function createBox(width, height, depth, colour, texturePath, normalMap, xPos, yPos, zPos){
+  var geometry = new THREE.CubeGeometry(width, height, depth);
+
+  var boxMaterial = new THREE.MeshPhongMaterial({});
+
+  if(colour != null){
+    boxMaterial.color = new THREE.Color(colour);
+  }
+
+  if(texturePath != null){
+    var texture = new THREE.TextureLoader().load(texturePath);
+    boxMaterial.map = texture;
+  }
+
+  if(normalMap != null){
+    boxMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
+  }
+
+  var box = new THREE.Mesh(geometry, boxMaterial);
+  if (xPos) {
+    box.position.x = xPos;
+  }
+
+  if (yPos) {
+    box.position.y = yPos;
+  }
+
+  if (zPos) {
+    box.position.z = zPos;
+  }
+  return box;
 }
 
 function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
