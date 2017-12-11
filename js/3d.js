@@ -39,9 +39,9 @@ function main() {
     this.flashlightStrength = 0.8;
     this.spotLights = true;
     this.roomLight = true;
-    this.roomLightStrength = 0.2;
+    this.roomLightStrength = 0.8;
     this.ambientLight = true;
-    this.ambientLightStrength = 0.9;
+    this.ambientLightStrength = 0.4;
     this.x1 = 16054;
     this.y1 = 10000;
     this.z1 = 0;
@@ -102,7 +102,7 @@ function main() {
   addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //Table
-  addToScene(createBox(50000,800,20000,0xffffff,"img/desk.png",null,-15000,-695,-300));
+  addToScene(createBox(50000,800,20000,0xffffff,"img/desk.jpg","img/desk_normal.png",-15000,-695,-300));
 
   //Base
   addToScene(createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
@@ -133,7 +133,7 @@ function main() {
   addToScene(createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
 
   //Trees
-  const treeCount = 30;
+  const treeCount = 1;
   var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
   for (var i = 0; i < treeCount; i++){
   	addToScene(createTree(30, 220, treePos[0][i] , 0, treePos[1][i]));
@@ -174,9 +174,9 @@ function main() {
   this.lights.push(createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0,0, -340, -35,314,-521, 256, 256));
   // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
-  this.lights.push(createSpotLight(0xffffff, 0.2, 1000000, 50, 2, 0.5, 0, 0, 0, 6300,11719, 9551, 4096, 4096, "RoomLight"));
+  this.lights.push(createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300,11719, 9551, 4096, 4096, "RoomLight"));
 
-  this.lights.push(setAmbientLight(0xb5f1ff, 0.9));
+  this.lights.push(setAmbientLight(0xb5f1ff, 0.4));
 
   var cameraLight = createPointLight(0xffffff, 0.8, 0, 0, 0);
   camera.add(cameraLight);
@@ -447,6 +447,8 @@ function createBox(width, height, depth, colour, texturePath, normalMap, xPos, y
   var geometry = new THREE.CubeGeometry(width, height, depth);
 
   var boxMaterial = new THREE.MeshPhongMaterial({});
+  boxMaterial.shininess=100;
+
 
   if(colour != null){
     boxMaterial.color = new THREE.Color(colour);
