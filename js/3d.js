@@ -18,7 +18,8 @@ function main() {
 
   var renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap consider changing shadow res
+  renderer.shadowMap.type = THREE.PCFShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
+
   const scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb5f1ff);
 
@@ -42,13 +43,14 @@ function main() {
     this.roomLightStrength = 0.8;
     this.ambientLight = true;
     this.ambientLightStrength = 0.4;
+    // this.highQuality = true;
     this.x1 = 16054;
     this.y1 = 10000;
     this.z1 = 0;
     this.x2 = 0;
     this.y2 = 0;
     this.z2 = 0;
-    // this.snowAmount = 10000;
+    this.snowAmount = 10000;
     this.fun = function() {
       console.log("BOOM!");
     };
@@ -66,6 +68,7 @@ function main() {
     gui.add(this.settings, "ambientLightStrength", 0.1, 2);
     gui.add(this.settings, "roomLight");
     gui.add(this.settings, "roomLightStrength", 0.1, 2);
+    // gui.add(this.settings, "highQuality");
     gui.add(this.settings, "x1", 0, 100000);
     gui.add(this.settings, "y1", 0, 100000);
     gui.add(this.settings, "z1", 0, 100000);
@@ -80,7 +83,7 @@ function main() {
     animate();
   };
   //Add Controls
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
   var rotateReset;
   controls.rotateSpeed = 1.0;
   controls.zoomSpeed = 1.5;
@@ -102,7 +105,7 @@ function main() {
   addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //Table
-  addToScene(createBox(50000,800,20000,0xffffff,"img/desk.jpg","img/desk_normal.png",-15000,-695,-300));
+  addToScene(createBox(50000,800,20000,0xffffff,"img/desk.jpg","img/desk_normal.png", 100, -15000,-695,-300));
 
   //Base
   addToScene(createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
@@ -133,11 +136,44 @@ function main() {
   addToScene(createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
 
   //Trees
-  const treeCount = 1;
+  const treeCount = 10;
   var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
   for (var i = 0; i < treeCount; i++){
   	addToScene(createTree(30, 220, treePos[0][i] , 0, treePos[1][i]));
   }
+
+  //Campfire
+  THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.setPath( 'models/' );
+        mtlLoader.load( 'campfire.mtl', function( materials ) {
+          materials.preload();
+            var objLoader = new THREE.OBJLoader();
+  objLoader.setMaterials( materials );
+  objLoader.load(
+  // resource URL
+  'models/campfire.obj',
+  // called when resource is loaded
+  function ( object ) {
+
+    object.position.y = -100;
+    scene.add( object );
+
+  },
+  // called when loading is in progresses
+  function ( xhr ) {
+
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+  },
+  // called when loading has errors
+  function ( error ) {
+
+    console.log( 'An error happened' );
+
+  }
+);
+  });
 
   //Text
   var loader = new THREE.FontLoader();
@@ -269,7 +305,7 @@ function main() {
       cameraLight.intensity = 0;
     }
 
-    if (this.settings.spotLights) {
+    if (this.settings.spotLights) {  //TODO: Only run these loops on change
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
           this.lights[i].visible = true;
@@ -443,11 +479,11 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
   return cone;
 }
 
-function createBox(width, height, depth, colour, texturePath, normalMap, xPos, yPos, zPos){
+function createBox(width, height, depth, colour, texturePath, normalMap, shininess, xPos, yPos, zPos){
   var geometry = new THREE.CubeGeometry(width, height, depth);
 
   var boxMaterial = new THREE.MeshPhongMaterial({});
-  boxMaterial.shininess=100;
+  boxMaterial.shininess=shininess;
 
 
   if(colour != null){
