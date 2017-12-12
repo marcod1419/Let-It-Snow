@@ -5,26 +5,26 @@ class Snowglobe{
     this.objects = [];
     this.lights = [];
 
-    this.cameraAutoRotate = false;
-    this.cameraAutoRotateSpeed = 0.15;
-    this.flashlight = false;
-    this.flashlightStrength = 0.8;
-    this.spotLights = true;
-    this.roomLight = true;
-    this.roomLightStrength = 0.8;
-    this.ambientLight = true;
-    this.ambientLightStrength = 0.4;
-    // this.highQuality = true;
-    this.x1 = 16054;
-    this.y1 = 10000;
-    this.z1 = 0;
-    this.x2 = 0;
-    this.y2 = 0;
-    this.z2 = 0;
-    this.snowAmount = 10000;
-    this.fun = function() {
-      console.log("BOOM!");
-    };
+    // this.cameraAutoRotate = false;
+    // this.cameraAutoRotateSpeed = 0.15;
+    // this.flashlight = false;
+    // this.flashlightStrength = 0.8;
+    // this.spotLights = true;
+    // this.roomLight = true;
+    // this.roomLightStrength = 0.8;
+    // this.ambientLight = true;
+    // this.ambientLightStrength = 0.4;
+    // // this.highQuality = true;
+    // this.x1 = 16054;
+    // this.y1 = 10000;
+    // this.z1 = 0;
+    // this.x2 = 0;
+    // this.y2 = 0;
+    // this.z2 = 0;
+    // this.snowAmount = 10000;
+    // this.fun = function() {
+    //   console.log("BOOM!");
+    // };
 
   }
 
@@ -44,7 +44,7 @@ init() {
   const container = document.querySelector("#container");
 
   var renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = false;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
 
   const scene = new THREE.Scene();
@@ -105,10 +105,11 @@ init() {
 
 
     // gui.add(this.settings, "snowAmount", 0, 10000);
-    // gui.add(this.settings, "fun");
+    gui.add(this.settings, "fun");
     render();
     animate();
-  };
+
+  }.bind(this);
   //Add Controls
   var controls = new THREE.OrbitControls(camera, renderer.domElement);
   var rotateReset;
@@ -302,9 +303,8 @@ init() {
     }
   }, 1000 / 60);
 
-  var animate = ()=>{
+  var animate = () => {
     requestAnimationFrame(animate);
-
     snowFall.geometry.verticesNeedUpdate = true;
 
     for (var i = 0; i < this.lights.length; i++) {
@@ -321,19 +321,18 @@ init() {
     // lights[3].target.position.z = this.settings.z2;
 
 
-    controls.autoRotateSpeed = this.cameraAutoRotateSpeed;
-    controls.autoRotate = this.cameraAutoRotate;
+    controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
+    controls.autoRotate = this.settings.cameraAutoRotate;
 
-
-    if (this.flashlight) {
-      cameraLight.intensity = this.flashlightStrength;
+    if (this.settings.flashlight) {
+      cameraLight.intensity = this.settings.flashlightStrength;
     } 
 
     else {
       cameraLight.intensity = 0;
     }
 
-    if (this.spotLights) {  //TODO: Only run these loops on change
+    if (this.settings.spotLights) {  //TODO: Only run these loops on change
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
           this.lights[i].visible = true;
@@ -349,11 +348,11 @@ init() {
       }
     }
 
-    if (this.roomLight){
+    if (this.settings.roomLight){
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].name === "RoomLight") {
           this.lights[i].visible = true;
-          this.lights[i].intensity = this.roomLightStrength
+          this.lights[i].intensity = this.settings.roomLightStrength
         }
       }
     }
@@ -362,16 +361,16 @@ init() {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].name === "RoomLight") {
           this.lights[i].visible = false;
-          this.lights[i].intensity = this.roomLightStrength
+          this.lights[i].intensity = this.settings.roomLightStrength
         }
       }
     }
 
-    if (this.ambientLight) {
+    if (this.settings.ambientLight) {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "AmbientLight") {
           this.lights[i].visible = true;
-          this.lights[i].intensity = this.ambientLightStrength;
+          this.lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
     } 
@@ -380,7 +379,7 @@ init() {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "AmbientLight") {
           this.lights[i].visible = false;
-          this.lights[i].intensity = this.ambientLightStrength;
+          this.lights[i].intensity = this.settings.ambientLightStrength;
         }
       }
     }
