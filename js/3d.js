@@ -1,4 +1,34 @@
-function main() {
+"use strict";
+
+class Snowglobe{
+  constructor(){
+    this.objects = [];
+    this.lights = [];
+
+    this.cameraAutoRotate = false;
+    this.cameraAutoRotateSpeed = 0.15;
+    this.flashlight = false;
+    this.flashlightStrength = 0.8;
+    this.spotLights = true;
+    this.roomLight = true;
+    this.roomLightStrength = 0.8;
+    this.ambientLight = true;
+    this.ambientLightStrength = 0.4;
+    // this.highQuality = true;
+    this.x1 = 16054;
+    this.y1 = 10000;
+    this.z1 = 0;
+    this.x2 = 0;
+    this.y2 = 0;
+    this.z2 = 0;
+    this.snowAmount = 10000;
+    this.fun = function() {
+      console.log("BOOM!");
+    };
+
+  }
+
+init() {
   //Scene size
   var windowWidth = window.innerWidth;
   var windowHeight = window.innerHeight;
@@ -11,14 +41,11 @@ function main() {
     camera.updateProjectionMatrix();
   });
 
-  this.objects = [];
-  this.lights = [];
-
   const container = document.querySelector("#container");
 
   var renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
 
   const scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb5f1ff);
@@ -90,69 +117,70 @@ function main() {
   controls.enablePan = false;
   controls.target.set(0, 50, -300);
   controls.enableDamping = true;
-  controls.maxPolarAngle = degToRad(90);
+  controls.maxPolarAngle = this.degToRad(90);
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.15;
   controls.minDistance = 250;
   controls.maxDistance = 30000;
-  controls.addEventListener("change", render);
+  controls.addEventListener("change", ()=>{render();});
 
   //Initialize renderer
   renderer.setSize(windowWidth, windowHeight);
   container.appendChild(renderer.domElement);
 
   //Floor
-  addToScene(createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  this.addToScene(this.createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //Table
-  addToScene(createBox(50000,800,20000,0xffffff,"img/desk.jpg","img/desk_normal.png", 100, -15000,-695,-300));
+  this.addToScene(this.createBox(50000,800,20000,0xffffff,"img/desk.jpg","img/desk_normal.png", 100, -15000,-695,-300));
 
   //Base
-  addToScene(createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
+  this.addToScene(this.createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
 
   //Glass
-  addToScene(createSphere(1500, 1500, 50, 0xffffff, 0, -100, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
+  this.addToScene(this.createSphere(1500, 1500, 50, 0xffffff, 0, -100, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
 
   //~Body~
-  addToScene(createSphere(60, 50, 16, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  addToScene(createSphere(40, 50, 16, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-  addToScene(createSphere(30, 50, 16, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  this.addToScene(this.createSphere(60, 50, 16, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  this.addToScene(this.createSphere(40, 50, 16, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+  this.addToScene(this.createSphere(30, 50, 16, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
   //~Face~
 
   //Eyes
-  addToScene(createSphere(2, 50, 8, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 8, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
 
   //Nose
-  addToScene(createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png"));
+  this.addToScene(this.createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png"));
 
   //Mouth
-  addToScene(createSphere(2, 50, 8, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 8, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 8, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 8, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 8, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-  addToScene(createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
+  this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
 
   //Trees
   const treeCount = 10;
-  var treePos = randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
+  var treePos = this.randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
   for (var i = 0; i < treeCount; i++){
-  	addToScene(createTree(30, 220, treePos[0][i] , 0, treePos[1][i]));
+    this.addToScene(this.createTree(30, 220, treePos[0][i] , 0, treePos[1][i]));
   }
 
   //Campfire
   THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
   var mtlLoader = new THREE.MTLLoader();
-  mtlLoader.setPath( 'models/' );
-        mtlLoader.load( 'campfire.mtl', function( materials ) {
+  mtlLoader.setPath( 'models/male02/' );
+        mtlLoader.load( 'male02.mtl', function( materials ) {
           materials.preload();
             var objLoader = new THREE.OBJLoader();
   objLoader.setMaterials( materials );
+  objLoader.setPath( 'models/male02/' );
   objLoader.load(
   // resource URL
-  'models/campfire.obj',
+  'male02.obj',
   // called when resource is loaded
   function ( object ) {
 
@@ -200,21 +228,21 @@ function main() {
     scene.add(textMesh);
   });
 
-  for (var i = 0; i < objects.length; i++) {
-    scene.add(objects[i]);
+  for (var i = 0; i < this.objects.length; i++) {
+    scene.add(this.objects[i]);
   }
 
   //Lights
-  this.lights.push(createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20,-126, -354, 293, 223, -5, 256, 256));
-  this.lights.push(createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20,-126, -354, -293, 223, -5, 256, 256));
-  this.lights.push(createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0,0, -340, -35,314,-521, 256, 256));
+  this.lights.push(this.createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20,-126, -354, 293, 223, -5, 256, 256));
+  this.lights.push(this.createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20,-126, -354, -293, 223, -5, 256, 256));
+  this.lights.push(this.createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0,0, -340, -35,314,-521, 256, 256));
   // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
-  this.lights.push(createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300,11719, 9551, 4096, 4096, "RoomLight"));
+  this.lights.push(this.createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300,11719, 9551, 4096, 4096, "RoomLight"));
 
-  this.lights.push(setAmbientLight(0xb5f1ff, 0.4));
+  this.lights.push(this.setAmbientLight(0xb5f1ff, 0.4));
 
-  var cameraLight = createPointLight(0xffffff, 0.8, 0, 0, 0);
+  var cameraLight = this.createPointLight(0xffffff, 0.8, 0, 0, 0);
   camera.add(cameraLight);
 
   for (var i = 0; i < this.lights.length; i++) {
@@ -274,7 +302,7 @@ function main() {
     }
   }, 1000 / 60);
 
-  function animate() {
+  var animate = ()=>{
     requestAnimationFrame(animate);
 
     snowFall.geometry.verticesNeedUpdate = true;
@@ -293,19 +321,19 @@ function main() {
     // lights[3].target.position.z = this.settings.z2;
 
 
-    controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
-    controls.autoRotate = this.settings.cameraAutoRotate;
+    controls.autoRotateSpeed = this.cameraAutoRotateSpeed;
+    controls.autoRotate = this.cameraAutoRotate;
 
 
-    if (this.settings.flashlight) {
-      cameraLight.intensity = this.settings.flashlightStrength;
+    if (this.flashlight) {
+      cameraLight.intensity = this.flashlightStrength;
     } 
 
     else {
       cameraLight.intensity = 0;
     }
 
-    if (this.settings.spotLights) {  //TODO: Only run these loops on change
+    if (this.spotLights) {  //TODO: Only run these loops on change
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
           this.lights[i].visible = true;
@@ -321,11 +349,11 @@ function main() {
       }
     }
 
-    if (this.settings.roomLight){
+    if (this.roomLight){
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].name === "RoomLight") {
           this.lights[i].visible = true;
-          this.lights[i].intensity = this.settings.roomLightStrength
+          this.lights[i].intensity = this.roomLightStrength
         }
       }
     }
@@ -334,16 +362,16 @@ function main() {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].name === "RoomLight") {
           this.lights[i].visible = false;
-          this.lights[i].intensity = this.settings.roomLightStrength
+          this.lights[i].intensity = this.roomLightStrength
         }
       }
     }
 
-    if (this.settings.ambientLight) {
+    if (this.ambientLight) {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "AmbientLight") {
           this.lights[i].visible = true;
-          this.lights[i].intensity = this.settings.ambientLightStrength;
+          this.lights[i].intensity = this.ambientLightStrength;
         }
       }
     } 
@@ -352,7 +380,7 @@ function main() {
       for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type === "AmbientLight") {
           this.lights[i].visible = false;
-          this.lights[i].intensity = this.settings.ambientLightStrength;
+          this.lights[i].intensity = this.ambientLightStrength;
         }
       }
     }
@@ -362,12 +390,12 @@ function main() {
     render();
   }
 
-  function render() {
+  var render = () => {
     renderer.render(scene, camera);
   }
 }
 
-function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, normalMap, alphaMap, envMap, refractionRatio, depthWrite=true, wireframeEnabled=false, isGlobeGlass=false) {
+createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, normalMap, alphaMap, envMap, refractionRatio, depthWrite=true, wireframeEnabled=false, isGlobeGlass=false) {
   const RADIUS = rad;
   const SEGMENTS = seg;
   const RINGS = ring;
@@ -405,7 +433,7 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
 
   var sphere;
   if(isGlobeGlass){
-    sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS, 0, Math.PI*2,degToRad(0),degToRad(90)), sphereMaterial);
+    sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS, 0, Math.PI*2,this.degToRad(0),this.degToRad(90)), sphereMaterial);
   }
   else{
     sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS), sphereMaterial);
@@ -429,7 +457,7 @@ function createSphere(rad, seg, ring, colour, xPos, yPos, zPos, texturePath, nor
   return sphere;
 }
 
-function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap) {
+createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap) {
   var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
 
   var coneMaterial = new THREE.MeshPhongMaterial({});
@@ -462,15 +490,15 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
   }
 
   if (xRot) {
-    cone.rotation.x = degToRad(xRot);
+    cone.rotation.x = this.degToRad(xRot);
   }
 
   if (yRot) {
-    cone.rotation.y = degToRad(yRot);
+    cone.rotation.y = this.degToRad(yRot);
   }
 
   if (zRot) {
-    cone.rotation.z = degToRad(zRot);
+    cone.rotation.z = this.degToRad(zRot);
   }
 
   cone.castShadow = true;
@@ -479,7 +507,7 @@ function createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRo
   return cone;
 }
 
-function createBox(width, height, depth, colour, texturePath, normalMap, shininess, xPos, yPos, zPos){
+createBox(width, height, depth, colour, texturePath, normalMap, shininess, xPos, yPos, zPos){
   var geometry = new THREE.CubeGeometry(width, height, depth);
 
   var boxMaterial = new THREE.MeshPhongMaterial({});
@@ -517,7 +545,7 @@ function createBox(width, height, depth, colour, texturePath, normalMap, shinine
   return box;
 }
 
-function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
+createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
   var geometry = new THREE.PlaneGeometry(width, height, 32);
 
   var planeMaterial = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
@@ -554,7 +582,7 @@ function createPlane(width, height, colour, xPos, yPos, zPos, texturePath, norma
   return plane;
 }
 
-function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, normalMap) {
+createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, normalMap) {
   var geometry = new THREE.CircleGeometry(rad, seg, 16); //TODO: Add sides param to function
 
  
@@ -595,8 +623,8 @@ function createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, norm
   return circlePlane;
 }
 
-function createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos){
-	var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 16, 16); //TODO: Add sides param to function
+createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos){
+  var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 16, 16); //TODO: Add sides param to function
 
   var cylinderMaterial = new THREE.MeshPhongMaterial({});
 
@@ -614,38 +642,38 @@ function createCylinder(radTop, radBottom, height, colour, texturePath, normalMa
   }
 
 
-	var cylinder = new THREE.Mesh(cylinderGeo, cylinderMaterial);
+  var cylinder = new THREE.Mesh(cylinderGeo, cylinderMaterial);
 
-	if (xPos) {
-    	cylinder.position.x = xPos;
-	}
+  if (xPos) {
+      cylinder.position.x = xPos;
+  }
 
-	if (yPos) {
-	    cylinder.position.y = yPos;
-	}
+  if (yPos) {
+      cylinder.position.y = yPos;
+  }
 
-	if (zPos) {
-	    cylinder.position.z = zPos;
-	 }
+  if (zPos) {
+      cylinder.position.z = zPos;
+   }
 
   cylinder.castShadow = true;
   cylinder.receiveShadow = true;
 
-	 return cylinder;
+   return cylinder;
 }
 
-function createTree(width, height, xPos, yPos, zPos) {
-	var tree = [];
+createTree(width, height, xPos, yPos, zPos) {
+  var tree = [];
 
-	tree.push(createCylinder(width, width, height, 0x593c2f, "img/trunk.jpg", "img/trunk_normal.png", xPos, yPos, zPos));
-	tree.push(createCone(width*4, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.5, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png"));
-	tree.push(createCone(width*4.5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.2, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png"));
-	// tree.push(createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
+  tree.push(this.createCylinder(width, width, height, 0x593c2f, "img/trunk.jpg", "img/trunk_normal.png", xPos, yPos, zPos));
+  tree.push(this.createCone(width*4, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.5, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png"));
+  tree.push(this.createCone(width*4.5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1.2, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png"));
+  // tree.push(this.createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
 
-	return tree;
+  return tree;
 }
 
-function createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yPos, zPos){
+createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yPos, zPos){
   var cylinderGeo = new THREE.CylinderGeometry(width, width, height, 50, 50);
 
   var cylinderMaterial = new THREE.MeshPhongMaterial({});
@@ -689,7 +717,7 @@ function createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yP
 }
 
 
-function createPointLight(colour, str, xPos, yPos, zPos) {
+createPointLight(colour, str, xPos, yPos, zPos) {
   var pointLight = new THREE.PointLight(colour, str);
 
   if(xPos && yPos && zPos){
@@ -705,8 +733,8 @@ function createPointLight(colour, str, xPos, yPos, zPos) {
   return pointLight;
 }
 
-function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, zPos, xRot, yRot, zRot, shadowW, shadowH, name="") {
-  var spotLight = new THREE.SpotLight(colour, str, distance, degToRad(angle), blur, decay);
+createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, zPos, xRot, yRot, zRot, shadowW, shadowH, name="") {
+  var spotLight = new THREE.SpotLight(colour, str, distance, this.degToRad(angle), blur, decay);
   spotLight.castShadow = true;
   spotLight.shadow.mapSize.width = shadowW;
   spotLight.shadow.mapSize.height = shadowH;
@@ -725,7 +753,7 @@ function createSpotLight(colour, str, distance, angle, blur, decay, xPos, yPos, 
   return spotLight;
 }
 
-function createDirectionalLight(colour, str, zPos, yPos, zPos, xRot, yRot, zRot){
+createDirectionalLight(colour, str, xPos, yPos, zPos, xRot, yRot, zRot){
   var directionalLight = new THREE.DirectionalLight( colour, str);
   directionalLight.castShadow = true;
   directionalLight.shadow.mapSize.width = 256;
@@ -744,15 +772,15 @@ function createDirectionalLight(colour, str, zPos, yPos, zPos, xRot, yRot, zRot)
   return directionalLight;
 }
 
-function setAmbientLight(colour, str) {
+setAmbientLight(colour, str) {
   return new THREE.AmbientLight(colour, str);
 }
 
-function degToRad(deg) {
+degToRad(deg) {
   return deg * (Math.PI / 180);
 }
 
-function addToScene(obj){
+addToScene(obj){
   if(obj.constructor === Array){
     for (var i = 0; i < obj.length; i++){
       this.objects.push(obj[i]);
@@ -763,34 +791,38 @@ function addToScene(obj){
   }
 }
 
-function randomNumber(min, max, spacing=0, rollNegative){
-	var num = Math.floor(Math.random() * (max-min)) + min + spacing;
+randomNumber(min, max, spacing=0, rollNegative){
+  var num = Math.floor(Math.random() * (max-min)) + min + spacing;
   if(rollNegative){
     num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
   } 
 
-	return num;
+  return num;
 }
 
-function randomNumberArray(minX, maxX, minZ, maxZ, xLimitMin, xLimitMax, zLimitMin, zLimitMax, amount, spacing){
-	var pos = [[],[]];
+randomNumberArray(minX, maxX, minZ, maxZ, xLimitMin, xLimitMax, zLimitMin, zLimitMax, amount, spacing){
+  var pos = [[],[]];
+  var xPos;
+  var zPos;
 
+  for (var i = 0; i < amount; i++){
+    xPos = this.randomNumber(minX,maxX, spacing, true);
+    zPos = this.randomNumber(minZ,maxZ, spacing, true);
 
-	for (var i = 0; i < amount; i++){
-		xPos = randomNumber(minX,maxX, spacing, true);
-		zPos = randomNumber(minZ,maxZ, spacing, true);
+    if (xPos >= xLimitMin && xPos <= xLimitMax){
+      while (zPos >= zLimitMin && zPos <= zLimitMax){
+        zPos = this.randomNumber(minZ,maxZ, spacing, true);
+      }
+    }
+    pos[0].push(xPos);
+    pos[1].push(zPos);
 
-		if (xPos >= xLimitMin && xPos <= xLimitMax){
-			while (zPos >= zLimitMin && zPos <= zLimitMax){
-				zPos = randomNumber(minZ,maxZ, spacing, true);
-			}
-		}
-		pos[0].push(xPos);
-		pos[1].push(zPos);
+  }
 
-	}
-
-	return pos;
+  return pos;
 }
 
-main();
+}
+
+var snowglobe = new Snowglobe;
+snowglobe.init();
