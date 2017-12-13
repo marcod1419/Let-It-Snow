@@ -4,28 +4,6 @@ class Snowglobe{
   constructor(){
     this.objects = [];
     this.lights = [];
-
-    // this.cameraAutoRotate = false;
-    // this.cameraAutoRotateSpeed = 0.15;
-    // this.flashlight = false;
-    // this.flashlightStrength = 0.8;
-    // this.spotLights = true;
-    // this.roomLight = true;
-    // this.roomLightStrength = 0.8;
-    // this.ambientLight = true;
-    // this.ambientLightStrength = 0.4;
-    // // this.highQuality = true;
-    // this.x1 = 16054;
-    // this.y1 = 10000;
-    // this.z1 = 0;
-    // this.x2 = 0;
-    // this.y2 = 0;
-    // this.z2 = 0;
-    // this.snowAmount = 10000;
-    // this.fun = function() {
-    //   console.log("BOOM!");
-    // };
-
   }
 
 init() {
@@ -44,7 +22,7 @@ init() {
   const container = document.querySelector("#container");
 
   var renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.shadowMap.enabled = false;
+  renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
 
   const scene = new THREE.Scene();
@@ -78,8 +56,9 @@ init() {
     this.y2 = 0;
     this.z2 = 0;
     this.snowAmount = 10000;
+    this.disableShadows = false;
     this.fun = function() {
-      console.log("BOOM!");
+      console.log("Disabling Shadows...")
     };
   };
 
@@ -95,7 +74,7 @@ init() {
     gui.add(this.settings, "ambientLightStrength", 0.1, 2);
     gui.add(this.settings, "roomLight");
     gui.add(this.settings, "roomLightStrength", 0.1, 2);
-    // gui.add(this.settings, "highQuality");
+    gui.add(this.settings, "disableShadows");
     gui.add(this.settings, "x1", 0, 100000);
     gui.add(this.settings, "y1", 0, 100000);
     gui.add(this.settings, "z1", 0, 100000);
@@ -380,6 +359,23 @@ init() {
         if (this.lights[i].type === "AmbientLight") {
           this.lights[i].visible = false;
           this.lights[i].intensity = this.settings.ambientLightStrength;
+        }
+      }
+    }
+
+    if(this.settings.disableShadows) {
+      for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type !== "AmbientLight") {
+        renderer.shadowMap.autoUpdate = false;
+        renderer.clearTarget(this.lights[i].shadow.map);
+        }
+      }
+    }
+    else{
+       for (var i = 0; i < this.lights.length; i++) {
+        if (this.lights[i].type !== "AmbientLight") {
+        renderer.shadowMap.autoUpdate = true;
+        renderer.clearTarget(this.lights[i].shadow.map);
         }
       }
     }
