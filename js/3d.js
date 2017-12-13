@@ -179,7 +179,7 @@ class Snowglobe {
     var rotateReset;
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.5;
-    controls.enablePan = false;
+    controls.enablePan = true;
     controls.target.set(0, 50, -300);
     controls.enableDamping = true;
     controls.maxPolarAngle = this.degToRad(90);
@@ -196,17 +196,17 @@ class Snowglobe {
     container.appendChild(renderer.domElement);
 
     //Floor
-    this.addToScene(this.createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    // this.addToScene(this.createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Table
     this.addToScene(this.createBox(50000, 800, 20000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, -15000, -695, -300));
 
     //Base
-    this.addToScene(this.createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0));
+    this.addToScene(this.createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
     this.addToScene(
-      this.createSphere(1500, 1500, 50, 0xffffff, 0, -100, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
+      this.createSphere(1500, 1500, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
     );
 
     //~Body~
@@ -232,7 +232,7 @@ class Snowglobe {
     this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
 
     //Trees
-    const treeCount = 0;
+    const treeCount = 10;
     var treePos = this.randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
     for (var i = 0; i < treeCount; i++) {
       this.addToScene(this.createTree(30, 220, treePos[0][i], 0, treePos[1][i]));
@@ -287,6 +287,9 @@ class Snowglobe {
 
       var textMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, map: texture});
       var textMesh = new THREE.Mesh(textGeo, textMaterial);
+      textMesh.castShadow = true;
+      textMesh.receiveShadow = false;
+
       textMesh.position.set(-900, 700, -305);
       scene.add(textMesh);
     });
@@ -301,11 +304,11 @@ class Snowglobe {
     this.lights.push(this.createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0, 0, -340, -35, 314, -521, 256, 256));
     // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
-    this.lights.push(this.createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300, 11719, 9551, 4096, 4096, "RoomLight"));
+    this.lights.push(this.createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300, 11719, 9551, 8192, 8192, "RoomLight"));
 
     this.lights.push(this.setAmbientLight(0xb5f1ff, 0.4));
 
-    var cameraLight = this.createPointLight(0xffffff, 0.8, 0, 0, 0);
+    var cameraLight = this.createSpotLight(0xffffff, 0.8, 1000000, 1, 1, 0, 0, 0, -500, 1000, 5000, 20000, 8192, 8192);
     cameraLight.visible = false;
     camera.add(cameraLight);
 
@@ -435,8 +438,12 @@ class Snowglobe {
     var sphere;
     if (isGlobeGlass) {
       sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS, 0, Math.PI * 2, this.degToRad(0), this.degToRad(90)), sphereMaterial);
+      sphere.castShadow = false;
+      sphere.receiveShadow = false;
     } else {
       sphere = new THREE.Mesh(new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS), sphereMaterial);
+      sphere.castShadow = true;
+      sphere.receiveShadow = false;
     }
 
     if (xPos) {
@@ -450,9 +457,6 @@ class Snowglobe {
     if (zPos) {
       sphere.position.z = zPos;
     }
-
-    sphere.castShadow = true;
-    sphere.receiveShadow = false;
 
     return sphere;
   }
@@ -538,7 +542,7 @@ class Snowglobe {
     if (zPos) {
       box.position.z = zPos;
     }
-    box.castShadow = true;
+    box.castShadow = false;
     box.receiveShadow = true;
 
     return box;
@@ -675,8 +679,8 @@ class Snowglobe {
     return tree;
   }
 
-  createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yPos, zPos) {
-    var cylinderGeo = new THREE.CylinderGeometry(width, width, height, 50, 50);
+  createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yPos, zPos, groundColour, groundTexturePath, groundNormalMap) {
+    var cylinderGeo = new THREE.CylinderGeometry(width, width, height, 64, 64);
 
     var cylinderMaterial = new THREE.MeshPhongMaterial({});
 
@@ -693,9 +697,27 @@ class Snowglobe {
       cylinderMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
     }
 
+    var groundMaterial = new THREE.MeshPhongMaterial({});
+
+     if (groundColour != null) {
+      groundMaterial.color = new THREE.Color(groundColour);
+    }
+
+    if (groundTexturePath != null) {
+      var texture = new THREE.TextureLoader().load(groundTexturePath);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(16, 16);
+      groundMaterial.map = texture;
+    }
+
+    if (groundNormalMap != null) {
+      groundMaterial.normalMap = new THREE.TextureLoader().load(groundNormalMap);
+    }
+
     var hiddenMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
 
-    var baseMaterials = [cylinderMaterial, hiddenMaterial, hiddenMaterial];
+    var baseMaterials = [cylinderMaterial, groundMaterial, hiddenMaterial];
 
     var cylinder = new THREE.Mesh(cylinderGeo, baseMaterials);
 
@@ -711,7 +733,7 @@ class Snowglobe {
       cylinder.position.z = zPos;
     }
 
-    cylinder.castShadow = true;
+    cylinder.castShadow = false;
     cylinder.receiveShadow = true;
 
     return cylinder;
