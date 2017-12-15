@@ -179,7 +179,7 @@ class Snowglobe {
     var rotateReset;
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.5;
-    controls.enablePan = true;
+    controls.enablePan = false;
     controls.target.set(0, 50, -300);
     controls.enableDamping = true;
     controls.maxPolarAngle = this.degToRad(90);
@@ -202,57 +202,59 @@ class Snowglobe {
     this.addToScene(this.createBox(50000, 800, 20000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, -15000, -695, -300));
 
     //Base
-    this.addToScene(this.createGlobeBase(1500, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
     this.addToScene(
-      this.createSphere(1500, 1500, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
+      this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
     );
 
     //~Body~
-    this.addToScene(this.createSphere(60, 50, 16, 0xffffff, 0, -60, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-    this.addToScene(this.createSphere(40, 50, 16, 0xffffff, 0, 20, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-    this.addToScene(this.createSphere(30, 50, 16, 0xffffff, 0, 80, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createSphere(80, 50, 16, 0xffffff, 0, 110, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createSphere(60, 50, 16, 0xffffff, 0, 220, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //~Face~
 
     //Eyes
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -8, 85, -272, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 8, 85, -272, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -16, 240, -246, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 16, 240, -246, "img/rock.png", "img/rock_normal.png"));
 
     //Nose
-    this.addToScene(this.createCone(3, 20, 32, 32, 0xffffff, 0, 75, -265, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png", true, false));
+    this.addToScene(this.createCone(5, 25, 32, 32, 0xffffff, 0, 224, -232, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png", true, false));
 
     //Mouth
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -8, 65, -275, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, -3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 3, 63, -275, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 13, 68, -275, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(2, 50, 8, 0xffffff, 8, 65, -275, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -20, 214, -242, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -12, 207, -242, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -4, 203, -242, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 4, 203, -242, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 12, 207, -242, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 20, 214, -242, "img/rock.png", "img/rock_normal.png"));
 
     //Trees
-    const treeCount = 10;
-    var treePos = this.randomNumberArray(-1000, 1000, -1000, 1200, -400, 400, -700, 900, treeCount, 20); //TODO: Make sure trees dont go out back
+    const treeCount = 0;
+    var treePos = this.randomNumberArray(-600, 600, -600, 700, 0, 0, 0, 0, treeCount, 20); //TODO: Make sure trees dont go out back
     for (var i = 0; i < treeCount; i++) {
       this.addToScene(this.createTree(30, 220, treePos[0][i], 0, treePos[1][i]));
     }
 
-    //Campfire
+    //TopHat
     THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
     var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath("models/male02/");
-    mtlLoader.load("male02.mtl", function(materials) {
+    mtlLoader.setPath("models/TopHat/");
+    mtlLoader.load("TopHat.mtl", function(materials) {
       materials.preload();
       var objLoader = new THREE.OBJLoader();
       objLoader.setMaterials(materials);
-      objLoader.setPath("models/male02/");
+      objLoader.setPath("models/TopHat/");
       objLoader.load(
         // resource URL
-        "male02.obj",
+        "TopHat.obj",
         // called when resource is loaded
         function(object) {
-          object.position.y = -100;
+          object.position.y = 260;
+          object.position.z = -300;
+          object.scale.set(20,20,20);
           scene.add(object);
         },
         // called when loading is in progresses
@@ -318,12 +320,12 @@ class Snowglobe {
 
     //Snow
     var snowGeometry = new THREE.Geometry();
-    var particleCount = 5000;
+    var particleCount = 3000;
 
     for (var i = 0; i < particleCount; i++) {
       var snow = new THREE.Vector3();
 
-      var distance = 1400;
+      var distance = 800;
       var theta = THREE.Math.randFloatSpread(360);
       var phi = THREE.Math.randFloatSpread(360);
 
