@@ -273,7 +273,7 @@ class Snowglobe {
     loader.load("fonts/Heartbeat_in_Christmas_Regular.json", function(font) {
       var textGeo = new THREE.TextGeometry("Happy Holidays", {
         font: font,
-        size: 400,
+        size: 100,
         height: 10,
         curveSegments: 12,
         bevelEnabled: false,
@@ -292,7 +292,7 @@ class Snowglobe {
       textMesh.castShadow = true;
       textMesh.receiveShadow = false;
 
-      textMesh.position.set(-900, 700, -305);
+      textMesh.position.set(-200,400,-305);
       scene.add(textMesh);
     });
 
