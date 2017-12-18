@@ -1,4 +1,9 @@
-.mouse-instructions{
+body{
+	overflow: hidden;
+	background-color: #ffecbf;
+}
+
+#mouse-instructions{
   position: absolute;
   right: 0;
   bottom: 0;
@@ -7,6 +12,10 @@
   border-radius: 10px;
 }
 
+#container{
+	/*visibility: hidden;*/
+}
+
 .dg.ac{
-  /*visibility: hidden;*/
+  visibility: hidden;
 }

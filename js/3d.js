@@ -8,8 +8,10 @@ class Snowglobe {
 
   init() {
     //Scene size
-    var windowWidth = window.innerWidth;
-    var windowHeight = window.innerHeight;
+    // var windowWidth = window.innerWidth;
+    // var windowHeight = window.innerHeight;
+    const windowWidth = 800;
+    const windowHeight = 500;
 
     window.addEventListener("resize", function() {
       windowWidth = window.innerWidth;
@@ -33,7 +35,7 @@ class Snowglobe {
       .setPath("img/skybox/")
       .load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
 
-    const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500000);
+    const camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
 
     camera.position.set(0, 0, 900);
     camera.lookAt(scene.position);
@@ -190,6 +192,11 @@ class Snowglobe {
         cameraLight.intensity = this.settings.flashlightStrength;
       });
 
+
+      //Page Animation
+      TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+ 	TweenMax.fromTo(document.getElementById("thing"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+
       render();
       animate();
     };
@@ -224,9 +231,9 @@ class Snowglobe {
     this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
-    // this.addToScene(
-    //   this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
-    // );
+    this.addToScene(
+      this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
+    );
 
     //~Body~
     this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -394,9 +401,9 @@ class Snowglobe {
             var renderPass = new THREE.RenderPass( scene, camera );
 
         var bokehPass = new THREE.BokehPass( scene, camera, {
-          focus:    1.0,
-          aperture: 0.025,
-          maxblur:  1.0,
+          focus:  500,
+          aperture: 0.0,
+          maxblur: 1,
 
           width: windowWidth,
           height: windowHeight
