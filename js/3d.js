@@ -25,7 +25,7 @@ class Snowglobe {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
 
-    const scene = new THREE.Scene();
+    var scene = new THREE.Scene();
     // scene.background = new THREE.Color(0xb5f1ff);
 
     //Skybox
@@ -59,6 +59,9 @@ class Snowglobe {
       this.z2 = 0;
       this.snowAmount = 10000;
       this.disableShadows = false;
+      this.focus = 500.0,
+      this.aperture = 0.01,
+      this.maxBlur = 1.0
       this.fun = function() {
         console.log("Disabling Shadows...");
       };
@@ -83,6 +86,9 @@ class Snowglobe {
       gui.add(this.settings, "x2", 0, 10000);
       gui.add(this.settings, "y2", 0, 10000);
       gui.add(this.settings, "z2", 0, 10000);
+      var focus = gui.add(this.settings, "focus", 0, 1000);
+      var aperture = gui.add(this.settings, "aperture", 0, 1);
+      var maxBlur = gui.add(this.settings, "maxBlur", 0, 5);
 
       // gui.add(this.settings, "snowAmount", 0, 10000);
       gui.add(this.settings, "fun");
@@ -163,6 +169,19 @@ class Snowglobe {
         }
       });
 
+      focus.onChange(()=>{
+        this.postprocessing.bokeh.uniforms[ "focus" ].value = this.settings.focus;
+      });
+
+      aperture.onChange(()=>{
+        this.postprocessing.bokeh.uniforms[ "aperture" ].value = this.settings.aperture * 0.00001;
+      })
+
+      maxBlur.onChange(()=>{
+        this.postprocessing.bokeh.uniforms[ "maxblur" ].value = this.settings.maxBlur;
+
+      })
+
       flashLight.onChange(() => {
         cameraLight.visible = this.settings.flashlight;
       });
@@ -205,9 +224,9 @@ class Snowglobe {
     this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
-    this.addToScene(
-      this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
-    );
+    // this.addToScene(
+    //   this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
+    // );
 
     //~Body~
     this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -370,6 +389,31 @@ class Snowglobe {
       }
     }, 1000 / 60);
 
+    //DOF
+    this.postprocessing = {};
+            var renderPass = new THREE.RenderPass( scene, camera );
+
+        var bokehPass = new THREE.BokehPass( scene, camera, {
+          focus:    1.0,
+          aperture: 0.025,
+          maxblur:  1.0,
+
+          width: windowWidth,
+          height: windowHeight
+        } );
+
+        bokehPass.renderToScreen = true;
+
+        var composer = new THREE.EffectComposer( renderer );
+
+        composer.addPass( renderPass );
+        composer.addPass( bokehPass );
+
+        this.postprocessing.composer = composer;
+        this.postprocessing.bokeh = bokehPass;
+        scene.matrixAutoUpdate = false;
+    renderer.autoClear = false;
+
     var animate = () => {
       requestAnimationFrame(animate);
       snowFall.geometry.verticesNeedUpdate = true;
@@ -396,6 +440,7 @@ class Snowglobe {
     };
 
     var render = () => {
+      this.postprocessing.composer.render( 0.1 );
       renderer.render(scene, camera);
     };
   }
