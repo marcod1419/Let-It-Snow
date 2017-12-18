@@ -1,0 +1,12 @@
+.mouse-instructions{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 15%;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.dg.ac{
+  visibility: hidden;
+}

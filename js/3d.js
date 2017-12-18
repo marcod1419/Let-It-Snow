@@ -210,26 +210,26 @@ class Snowglobe {
     );
 
     //~Body~
-    this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-    this.addToScene(this.createSphere(80, 50, 16, 0xffffff, 0, 110, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-    this.addToScene(this.createSphere(60, 50, 16, 0xffffff, 0, 220, -300, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createSphere(80, 50, 16, 0xffffff, 0, 110, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createSphere(60, 50, 16, 0xffffff, 0, 220, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //~Face~
 
     //Eyes
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -16, 240, -246, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 16, 240, -246, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -16, 240, 54, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 16, 240, 54, "img/rock.png", "img/rock_normal.png"));
 
     //Nose
-    this.addToScene(this.createCone(5, 25, 32, 32, 0xffffff, 0, 224, -232, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png", true, false));
+    this.addToScene(this.createCone(5, 25, 32, 32, 0xffffff, 0, 224, 68, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png", true, false));
 
     //Mouth
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -20, 214, -242, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -12, 207, -242, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -4, 203, -242, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 4, 203, -242, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 12, 207, -242, "img/rock.png", "img/rock_normal.png"));
-    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 20, 214, -242, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -20, 214, 58, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -12, 207, 58, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, -4, 203, 58, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 4, 203, 58, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 12, 207, 58, "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 20, 214, 58, "img/rock.png", "img/rock_normal.png"));
 
     //Trees
     const treeCount = 0;
@@ -253,7 +253,6 @@ class Snowglobe {
         // called when resource is loaded
         function(object) {
           object.position.y = 260;
-          object.position.z = -300;
           object.scale.set(20,20,20);
           scene.add(object);
         },
@@ -273,7 +272,7 @@ class Snowglobe {
     loader.load("fonts/Heartbeat_in_Christmas_Regular.json", function(font) {
       var textGeo = new THREE.TextGeometry("Happy Holidays", {
         font: font,
-        size: 100,
+        size: 250,
         height: 10,
         curveSegments: 12,
         bevelEnabled: false,
@@ -292,7 +291,7 @@ class Snowglobe {
       textMesh.castShadow = true;
       textMesh.receiveShadow = false;
 
-      textMesh.position.set(-200,400,-305);
+      textMesh.position.set(-550,400,-5);
       scene.add(textMesh);
     });
 
@@ -301,9 +300,9 @@ class Snowglobe {
     }
 
     //Lights
-    this.lights.push(this.createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20, -126, -354, 293, 223, -5, 256, 256));
-    this.lights.push(this.createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20, -126, -354, -293, 223, -5, 256, 256));
-    this.lights.push(this.createSpotLight(0x0000ff, 0.3, 1000, 50, 1, 0.5, 0, 0, -340, -35, 314, -521, 256, 256));
+    this.lights.push(this.createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20, -126, -54, 293, 223, -5, 256, 256));
+    this.lights.push(this.createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20, -126, -54, -293, 223, -5, 256, 256));
+    this.lights.push(this.createSpotLight(0x0000ff, 0.5, 1000, 50, 1, 0.5, 0, 0, -340, 265, 314, -521, 256, 256));
     // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
     this.lights.push(this.createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300, 11719, 9551, 8192, 8192, "RoomLight"));
