@@ -33,10 +33,9 @@ class Snowglobe {
       .setPath("img/skybox/")
       .load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
 
-    const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500000);
-
-    camera.position.set(0, 0, 900);
-    camera.lookAt(scene.position);
+    var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500000);
+    camera.position.set(0, 0, 5000);
+    
     scene.add(camera);
 
     //GUI
@@ -50,7 +49,6 @@ class Snowglobe {
       this.roomLightStrength = 0.8;
       this.ambientLight = true;
       this.ambientLightStrength = 0.4;
-      // this.highQuality = true;
       this.x1 = 16054;
       this.y1 = 10000;
       this.z1 = 0;
@@ -59,9 +57,9 @@ class Snowglobe {
       this.z2 = 0;
       this.snowAmount = 10000;
       this.disableShadows = false;
-      this.focus = 500.0,
-      this.aperture = 0.01,
-      this.maxBlur = 1.0
+      this.focus = 594.0,
+      this.aperture = 0.09,
+      this.maxBlur = 0.001
       this.fun = function() {
         console.log("Disabling Shadows...");
       };
@@ -80,15 +78,15 @@ class Snowglobe {
       var roomLight = gui.add(this.settings, "roomLight");
       gui.add(this.settings, "roomLightStrength", 0.1, 2);
       var disableShadows = gui.add(this.settings, "disableShadows");
-      gui.add(this.settings, "x1", 0, 100000);
-      gui.add(this.settings, "y1", 0, 100000);
-      gui.add(this.settings, "z1", 0, 100000);
-      gui.add(this.settings, "x2", 0, 10000);
-      gui.add(this.settings, "y2", 0, 10000);
-      gui.add(this.settings, "z2", 0, 10000);
-      var focus = gui.add(this.settings, "focus", 0, 1000);
-      var aperture = gui.add(this.settings, "aperture", 0, 1);
-      var maxBlur = gui.add(this.settings, "maxBlur", 0, 5);
+      // gui.add(this.settings, "x1", 0, 100000);
+      // gui.add(this.settings, "y1", 0, 100000);
+      // gui.add(this.settings, "z1", 0, 100000);
+      // gui.add(this.settings, "x2", 0, 10000);
+      // gui.add(this.settings, "y2", 0, 10000);
+      // gui.add(this.settings, "z2", 0, 10000);
+      // var focus = gui.add(this.settings, "focus", 0, 1000);
+      // var aperture = gui.add(this.settings, "aperture", 0, 1);
+      // var maxBlur = gui.add(this.settings, "maxBlur", 0, 5);
 
       // gui.add(this.settings, "snowAmount", 0, 10000);
       gui.add(this.settings, "fun");
@@ -169,18 +167,18 @@ class Snowglobe {
         }
       });
 
-      focus.onChange(()=>{
-        this.postprocessing.bokeh.uniforms[ "focus" ].value = this.settings.focus;
-      });
+      // focus.onChange(()=>{
+      //   this.postprocessing.bokeh.uniforms[ "focus" ].value = this.settings.focus;
+      // });
 
-      aperture.onChange(()=>{
-        this.postprocessing.bokeh.uniforms[ "aperture" ].value = this.settings.aperture * 0.00001;
-      })
+      // aperture.onChange(()=>{
+      //   this.postprocessing.bokeh.uniforms[ "aperture" ].value = this.settings.aperture * 0.00001;
+      // })
 
-      maxBlur.onChange(()=>{
-        this.postprocessing.bokeh.uniforms[ "maxblur" ].value = this.settings.maxBlur;
+      // maxBlur.onChange(()=>{
+      //   this.postprocessing.bokeh.uniforms[ "maxblur" ].value = this.settings.maxBlur;
 
-      })
+      // })
 
       flashLight.onChange(() => {
         cameraLight.visible = this.settings.flashlight;
@@ -199,13 +197,13 @@ class Snowglobe {
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.5;
     controls.enablePan = false;
-    controls.target.set(0, 50, -300);
+    controls.target.set(0, 225, 0);
     controls.enableDamping = true;
     controls.maxPolarAngle = this.degToRad(90);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.15;
     controls.minDistance = 250;
-    controls.maxDistance = 30000;
+    controls.maxDistance = 10000;
     controls.addEventListener("change", () => {
       render();
     });
@@ -224,9 +222,9 @@ class Snowglobe {
     this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
-    // this.addToScene(
-    //   this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
-    // );
+    this.addToScene(
+      this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
+    );
 
     //~Body~
     this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -389,30 +387,30 @@ class Snowglobe {
       }
     }, 1000 / 60);
 
-    //DOF
-    this.postprocessing = {};
-            var renderPass = new THREE.RenderPass( scene, camera );
+    // //DOF
+    // this.postprocessing = {};
+    //         var renderPass = new THREE.RenderPass( scene, camera );
 
-        var bokehPass = new THREE.BokehPass( scene, camera, {
-          focus:    1.0,
-          aperture: 0.025,
-          maxblur:  1.0,
+    //     var bokehPass = new THREE.BokehPass( scene, camera, {
+    //       focus:    1.0,
+    //       aperture: 0.025,
+    //       maxblur:  1.0,
 
-          width: windowWidth,
-          height: windowHeight
-        } );
+    //       width: windowWidth,
+    //       height: windowHeight
+    //     } );
 
-        bokehPass.renderToScreen = true;
+    //     bokehPass.renderToScreen = true;
 
-        var composer = new THREE.EffectComposer( renderer );
+    //     var composer = new THREE.EffectComposer( renderer );
 
-        composer.addPass( renderPass );
-        composer.addPass( bokehPass );
+    //     composer.addPass( renderPass );
+    //     composer.addPass( bokehPass );
 
-        this.postprocessing.composer = composer;
-        this.postprocessing.bokeh = bokehPass;
-        scene.matrixAutoUpdate = false;
-    renderer.autoClear = false;
+    //     this.postprocessing.composer = composer;
+    //     this.postprocessing.bokeh = bokehPass;
+    //     scene.matrixAutoUpdate = false;
+    // renderer.autoClear = false;
 
     var animate = () => {
       requestAnimationFrame(animate);
@@ -440,7 +438,7 @@ class Snowglobe {
     };
 
     var render = () => {
-      this.postprocessing.composer.render( 0.1 );
+      // this.postprocessing.composer.render( 0.1 );
       renderer.render(scene, camera);
     };
   }
