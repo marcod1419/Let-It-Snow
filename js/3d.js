@@ -8,8 +8,10 @@ class Snowglobe {
 
   init() {
     //Scene size
-    var windowWidth = window.innerWidth;
-    var windowHeight = window.innerHeight;
+    // var windowWidth = window.innerWidth;
+    // var windowHeight = window.innerHeight;
+    const windowWidth = 800;
+    const windowHeight = 500;
 
     window.addEventListener("resize", function() {
       windowWidth = window.innerWidth;
@@ -35,7 +37,6 @@ class Snowglobe {
 
     var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500000);
     camera.position.set(0, 0, 5000);
-    
     scene.add(camera);
 
     //GUI
@@ -187,6 +188,11 @@ class Snowglobe {
       flashLightStrength.onChange(() => {
         cameraLight.intensity = this.settings.flashlightStrength;
       });
+
+
+      //Page Animation
+      TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+ 	TweenMax.fromTo(document.getElementById("thing"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
 
       render();
       animate();
