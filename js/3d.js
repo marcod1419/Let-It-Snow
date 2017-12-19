@@ -4,6 +4,8 @@ class Snowglobe {
   constructor() {
     this.objects = [];
     this.lights = [];
+
+    this.cameraAutoRotate = false;
   }
 
   init() {
@@ -11,15 +13,15 @@ class Snowglobe {
     // var windowWidth = window.innerWidth;
     // var windowHeight = window.innerHeight;
     const windowWidth = 800;
-    const windowHeight = 500;
+    const windowHeight = 450;
 
-    window.addEventListener("resize", function() {
-      windowWidth = window.innerWidth;
-      windowHeight = window.innerHeight;
-      renderer.setSize(windowWidth, windowHeight);
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-    });
+    // window.addEventListener("resize", function() {
+    //   windowWidth = window.innerWidth;
+    //   windowHeight = window.innerHeight;
+    //   renderer.setSize(windowWidth, windowHeight);
+    //   camera.aspect = window.innerWidth / window.innerHeight;
+    //   camera.updateProjectionMatrix();
+    // });
 
     const container = document.querySelector("#container");
 
@@ -31,12 +33,10 @@ class Snowglobe {
     // scene.background = new THREE.Color(0xb5f1ff);
 
     //Skybox
-    scene.background = new THREE.CubeTextureLoader()
-      .setPath("img/skybox/")
-      .load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
+    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
 
-    var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500000);
-    camera.position.set(0, 0, 5000);
+    var camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
+    camera.position.set(0, 0, 3000);
     scene.add(camera);
 
     //GUI
@@ -58,18 +58,16 @@ class Snowglobe {
       this.z2 = 0;
       this.snowAmount = 10000;
       this.disableShadows = false;
-      this.focus = 594.0,
-      this.aperture = 0.09,
-      this.maxBlur = 0.001
+      (this.focus = 594.0), (this.aperture = 0.09), (this.maxBlur = 0.001);
       this.fun = function() {
         console.log("Disabling Shadows...");
       };
     };
 
     window.onload = () => {
-
-    document.getElementById("envelope").addEventListener("click", this.animatePage());
-
+      document.getElementById("envelope").addEventListener("click", () => {
+        this.animatePage();
+      }, {once: true});
 
       this.settings = new settings();
       var gui = new dat.GUI();
@@ -89,11 +87,7 @@ class Snowglobe {
       // gui.add(this.settings, "x2", 0, 10000);
       // gui.add(this.settings, "y2", 0, 10000);
       // gui.add(this.settings, "z2", 0, 10000);
-      // var focus = gui.add(this.settings, "focus", 0, 1000);
-      // var aperture = gui.add(this.settings, "aperture", 0, 1);
-      // var maxBlur = gui.add(this.settings, "maxBlur", 0, 5);
 
-      // gui.add(this.settings, "snowAmount", 0, 10000);
       gui.add(this.settings, "fun");
 
       spotLights.onChange(() => {
@@ -172,19 +166,6 @@ class Snowglobe {
         }
       });
 
-      // focus.onChange(()=>{
-      //   this.postprocessing.bokeh.uniforms[ "focus" ].value = this.settings.focus;
-      // });
-
-      // aperture.onChange(()=>{
-      //   this.postprocessing.bokeh.uniforms[ "aperture" ].value = this.settings.aperture * 0.00001;
-      // })
-
-      // maxBlur.onChange(()=>{
-      //   this.postprocessing.bokeh.uniforms[ "maxblur" ].value = this.settings.maxBlur;
-
-      // })
-
       flashLight.onChange(() => {
         cameraLight.visible = this.settings.flashlight;
       });
@@ -217,9 +198,6 @@ class Snowglobe {
     renderer.setSize(windowWidth, windowHeight);
     container.appendChild(renderer.domElement);
 
-    //Floor
-    // this.addToScene(this.createCirclePlane(1500, 1500, 0xffffff, 0, -100, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
-
     //Table
     this.addToScene(this.createBox(50000, 800, 20000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, -15000, -695, -300));
 
@@ -227,9 +205,7 @@ class Snowglobe {
     this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
-    this.addToScene(
-      this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true)
-    );
+    this.addToScene(this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
 
     //~Body~
     this.addToScene(this.createSphere(120, 50, 16, 0xffffff, 0, -40, 0, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -275,7 +251,7 @@ class Snowglobe {
         // called when resource is loaded
         function(object) {
           object.position.y = 260;
-          object.scale.set(20,20,20);
+          object.scale.set(20, 20, 20);
           scene.add(object);
         },
         // called when loading is in progresses
@@ -306,7 +282,7 @@ class Snowglobe {
           object.position.x = 250;
           object.position.y = -100;
           object.position.z = -350;
-          object.scale.set(380,380,380);
+          object.scale.set(380, 380, 380);
           scene.add(object);
         },
         // called when loading is in progresses
@@ -344,7 +320,7 @@ class Snowglobe {
       textMesh.castShadow = true;
       textMesh.receiveShadow = false;
 
-      textMesh.position.set(-550,400,-5);
+      textMesh.position.set(-550, 400, -5);
       scene.add(textMesh);
     });
 
@@ -423,31 +399,6 @@ class Snowglobe {
       }
     }, 1000 / 60);
 
-    // //DOF
-    // this.postprocessing = {};
-    //         var renderPass = new THREE.RenderPass( scene, camera );
-
-    //     var bokehPass = new THREE.BokehPass( scene, camera, {
-    //       focus:    1.0,
-    //       aperture: 0.025,
-    //       maxblur:  1.0,
-
-    //       width: windowWidth,
-    //       height: windowHeight
-    //     } );
-
-    //     bokehPass.renderToScreen = true;
-
-    //     var composer = new THREE.EffectComposer( renderer );
-
-    //     composer.addPass( renderPass );
-    //     composer.addPass( bokehPass );
-
-    //     this.postprocessing.composer = composer;
-    //     this.postprocessing.bokeh = bokehPass;
-    //     scene.matrixAutoUpdate = false;
-    // renderer.autoClear = false;
-
     var animate = () => {
       requestAnimationFrame(animate);
       snowFall.geometry.verticesNeedUpdate = true;
@@ -466,7 +417,7 @@ class Snowglobe {
       // lights[3].target.position.z = this.settings.z2;
 
       controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
-      controls.autoRotate = this.settings.cameraAutoRotate;
+      controls.autoRotate = this.cameraAutoRotate;
 
       controls.update();
 
@@ -474,7 +425,6 @@ class Snowglobe {
     };
 
     var render = () => {
-      // this.postprocessing.composer.render( 0.1 );
       renderer.render(scene, camera);
     };
   }
@@ -541,7 +491,7 @@ class Snowglobe {
     return sphere;
   }
 
-  createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap, castShadow=true, receiveShadow=true) {
+  createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap, castShadow = true, receiveShadow = true) {
     var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
 
     var coneMaterial = new THREE.MeshPhongMaterial({});
@@ -748,12 +698,8 @@ class Snowglobe {
     var tree = [];
 
     tree.push(this.createCylinder(width, width, height, 0x593c2f, "img/trunk.jpg", "img/trunk_normal.png", xPos, yPos, zPos));
-    tree.push(
-      this.createCone(width * 4, height / 2, 32, 32, 0x00ff00, xPos, yPos + height / 1.5, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png", true, true)
-    );
-    tree.push(
-      this.createCone(width * 4.5, height / 2, 32, 32, 0x00ff00, xPos, yPos + height / 1.2, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png", true, true)
-    );
+    tree.push(this.createCone(width * 4, height / 2, 32, 32, 0x00ff00, xPos, yPos + height / 1.5, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png", true, true));
+    tree.push(this.createCone(width * 4.5, height / 2, 32, 32, 0x00ff00, xPos, yPos + height / 1.2, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png", true, true));
     // tree.push(this.createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
 
     return tree;
@@ -779,7 +725,7 @@ class Snowglobe {
 
     var groundMaterial = new THREE.MeshPhongMaterial({});
 
-     if (groundColour != null) {
+    if (groundColour != null) {
       groundMaterial.color = new THREE.Color(groundColour);
     }
 
@@ -922,24 +868,47 @@ class Snowglobe {
     return pos;
   }
 
-  animatePage(){
-     //Page Animation
-      var timeline = new TimelineMax({});
-      var card = document.getElementById("snowman-card");
-      var fade = document.getElementById("screen-fade");
+  animatePage() {
+    //Page Animation
+    var timeline = new TimelineMax({});
+    var envelope = document.getElementById("envelope");
+    var card = document.getElementById("snowman-card");
+    var cardContainer = document.getElementById("card-container");
+    var instructionsCard = document.getElementById("instructions-card");
+    var fade = document.getElementById("screen-fade");
+    console.log(this.cameraAutoRotate);
+    timeline.add(TweenMax.fromTo(card, 1, {autoAlpha: 1, y: 500}, {autoAlpha: 1, y: 300}));
+    timeline.add(
+      TweenMax.to(fade, 1, {
+        opacity: 1,
+        delay: 1,
+        onComplete: () => {
+          TweenMax.set(envelope, {autoAlpha: 0});
+          TweenMax.set(card, {x: 300});
+          TweenMax.set(cardContainer, {overflow: "visible"});
+          TweenMax.set(instructionsCard, {autoAlpha: 1});
+        }
+      })
+    );
 
-      timeline.add(TweenMax.fromTo(card, 1, {autoAlpha: 1, y:500}, {autoAlpha: 1, y:300}));
-      timeline.add(TweenMax.to(fade, 1, {opacity: 1, delay: 1}));
-      timeline.add(TweenMax.to(fade, 1, {opacity: 0, delay: 1}));
+    timeline.add(
+      TweenMax.to(fade, 1, {
+        opacity: 0,
+        delay: 1,
+        onComplete: () => {
+          this.cameraAutoRotate = true;
+        }
+      })
+    );
 
-      document.getElementById("envelope").src="img/intro/Envelope_Opened.png";
+    envelope.src = "img/intro/Envelope_Opened.png";
 
-      var envelopeOpen = new Audio('sound/intro/letter_open.wav');
-      envelopeOpen.play();
+    var envelopeOpen = new Audio("sound/intro/letter_open.wav");
+    envelopeOpen.play();
 
-      timeline.play();
-      // TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
-      // TweenMax.fromTo(document.getElementById("snowman-card"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+    timeline.play();
+    // TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+    // TweenMax.fromTo(document.getElementById("snowman-card"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
   }
 }
 
