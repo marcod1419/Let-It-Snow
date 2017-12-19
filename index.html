@@ -3,35 +3,28 @@
  <title>Merry Christmas!</title>
  <script type="text/javascript" src="js/three.min.js"></script>
  <script type="text/javascript" src="js/TweenMax.min.js"></script>
- <script type="text/javascript" src="js/ammo.js"></script>
+ <script type="text/javascript" src="js/TimelineMax.min.js"></script>
+
  <script type="text/javascript" src="js/controls/TrackballControls.js"></script>
  <script type="text/javascript" src="js/controls/OrbitControls.js"></script>
  <script type="text/javascript" src="js/OBJLoader.js"></script>
  <script type="text/javascript" src="js/MTLLoader.js"></script>
  <script type="text/javascript" src="js/DDSLoader.js"></script>
-
- <script type="text/javascript" src="js/shaders/CopyShader.js"></script>
- <script type="text/javascript" src="js/shaders/BokehShader.js"></script>
-
- <script type="text/javascript" src="js/postprocessing/EffectComposer.js"></script>
- <script type="text/javascript" src="js/postprocessing/RenderPass.js"></script>
- <script type="text/javascript" src="js/postprocessing/ShaderPass.js"></script>
- <script type="text/javascript" src="js/postprocessing/MaskPass.js"></script>
- <script type="text/javascript" src="js/postprocessing/BokehPass.js"></script>
     
  <script type="text/javascript" src="js/dat.gui.min.js"></script>
 
  <link rel="stylesheet" type="text/css" href="css/style.css">
  <link rel="stylesheet" type="text/css" href="css/normalize.css">
 
- <script>
- 
-</script>
 </head>
 <body>
+  <div id="screen-fade"></div>
+  <img src="img/intro/Envelope_Closed.png" id="envelope">
   <img src="img/instructions.png" id="mouse-instructions"/>
-  <div id="thing">
-  <div id="container"></div>
+  <div id="card-container">
+  <div id="snowman-card">
+    <div id="container"></div>
+  </div>
 </div>
   <script src="js/3d.js"></script>
 </body>

@@ -67,6 +67,10 @@ class Snowglobe {
     };
 
     window.onload = () => {
+
+    document.getElementById("envelope").addEventListener("click", this.animatePage());
+
+
       this.settings = new settings();
       var gui = new dat.GUI();
       gui.add(this.settings, "cameraAutoRotate");
@@ -189,11 +193,6 @@ class Snowglobe {
         cameraLight.intensity = this.settings.flashlightStrength;
       });
 
-
-      //Page Animation
-      TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
- 	TweenMax.fromTo(document.getElementById("thing"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
-
       render();
       animate();
     };
@@ -277,6 +276,37 @@ class Snowglobe {
         function(object) {
           object.position.y = 260;
           object.scale.set(20,20,20);
+          scene.add(object);
+        },
+        // called when loading is in progresses
+        function(xhr) {
+          console.log(xhr.loaded / xhr.total * 100 + "% loaded");
+        },
+        // called when loading has errors
+        function(error) {
+          console.log("An error happened");
+        }
+      );
+    });
+
+    //Christmas Tree
+    THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath("models/christmas_tree/");
+    mtlLoader.load("christmas_tree.mtl", function(materials) {
+      materials.preload();
+      var objLoader = new THREE.OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath("models/christmas_tree/");
+      objLoader.load(
+        // resource URL
+        "christmas_tree.obj",
+        // called when resource is loaded
+        function(object) {
+          object.position.x = 250;
+          object.position.y = -100;
+          object.position.z = -350;
+          object.scale.set(380,380,380);
           scene.add(object);
         },
         // called when loading is in progresses
@@ -890,6 +920,26 @@ class Snowglobe {
     }
 
     return pos;
+  }
+
+  animatePage(){
+     //Page Animation
+      var timeline = new TimelineMax({});
+      var card = document.getElementById("snowman-card");
+      var fade = document.getElementById("screen-fade");
+
+      timeline.add(TweenMax.fromTo(card, 1, {autoAlpha: 1, y:500}, {autoAlpha: 1, y:300}));
+      timeline.add(TweenMax.to(fade, 1, {opacity: 1, delay: 1}));
+      timeline.add(TweenMax.to(fade, 1, {opacity: 0, delay: 1}));
+
+      document.getElementById("envelope").src="img/intro/Envelope_Opened.png";
+
+      var envelopeOpen = new Audio('sound/intro/letter_open.wav');
+      envelopeOpen.play();
+
+      timeline.play();
+      // TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+      // TweenMax.fromTo(document.getElementById("snowman-card"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
   }
 }
 
