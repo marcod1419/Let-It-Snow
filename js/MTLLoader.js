@@ -438,12 +438,12 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 					break;
 
-				case 'map_d':
-		    // Alpha texture map
-		    params[ 'alphaMap' ] = this.loadTexture( this.baseUrl + value );
-		    params[ 'transparent' ] = true;
+				// case 'map_d':
+		  //   // Alpha texture map
+		  //   // params[ 'alphaMap' ] = this.loadTexture( this.baseUrl + value );
+		  //   // params[ 'transparent' ] = true;
 
-		    break;
+		  //   break;
 
 				case 'ns':
 
