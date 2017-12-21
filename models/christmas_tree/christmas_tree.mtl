@@ -5,8 +5,8 @@ Ks 0.000000 0.000000 0.000000
 Ns 2.000000
 d 1.000000
 Tr 0.000000
-map_Kd branch0000.png 
-map_D branch0000.png 
+map_Kd branch00000003.png 
+map_D branch00000003.png 
 
 newmtl gold
 Ka 0.000000 0.000000 0.000000
@@ -15,7 +15,7 @@ Ks 0.696017 0.656768 0.261984
 Ns 13.725490
 d 1.000000
 Tr 0.000000
-map_Kd gold - Default Texture.psd 
+map_Kd gold - Default Texture0003.psd 
 
 newmtl red-ball
 Ka 0.000000 0.000000 0.000000
@@ -24,7 +24,7 @@ Ks 0.797872 0.359201 0.328700
 Ns 190.196106
 d 1.000000
 Tr 0.000000
-map_Kd red-ball - Default Texture.psd 
+map_Kd red-ball - Default Texture0003.psd 
 
 newmtl silver
 Ka 0.000000 0.000000 0.000000
@@ -33,7 +33,7 @@ Ks 0.814046 0.814046 0.814046
 Ns 11.764705
 d 1.000000
 Tr 0.000000
-map_Kd silver - Default Texture.psd 
+map_Kd silver - Default Texture0003.psd 
 
 newmtl trunk
 Ka 0.000000 0.000000 0.000000
@@ -42,7 +42,7 @@ Ks 0.000000 0.000000 0.000000
 Ns 2.000000
 d 1.000000
 Tr 0.000000
-map_Kd trunk - Default Texture.psd 
+map_Kd trunk - Default Texture0003.psd 
 
 newmtl white-handle
 Ka 0.000000 0.000000 0.000000
@@ -51,5 +51,5 @@ Ks 0.334146 0.334146 0.334146
 Ns 96.078430
 d 1.000000
 Tr 0.000000
-map_Kd white-handle - Default Texture.psd 
+map_Kd white-handle - Default Texture0003.psd 
 

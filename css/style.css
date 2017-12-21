@@ -77,5 +77,6 @@ body{
 }
 
 .dg.ac{
-  visibility: hidden;
+  /*visibility: hidden;*/
+  z-index: 9999999999999;
 }

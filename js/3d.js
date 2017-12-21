@@ -33,7 +33,7 @@ class Snowglobe {
     // scene.background = new THREE.Color(0xb5f1ff);
 
     //Skybox
-    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall1.png", "wall1.png", "3.png", "floor.png", "wall1.png", "wall1.png"]);
+    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall4.png", "wall1.png", "3.png", "floor.png", "wall3.png", "wall2.png"]);
 
     var camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
     camera.position.set(0, 0, 3000);
@@ -250,6 +250,14 @@ class Snowglobe {
         "TopHat.obj",
         // called when resource is loaded
         function(object) {
+           object.traverse( function ( child ) {
+                if ( child instanceof THREE.Mesh ) {        
+                    child.material = new THREE.MeshPhongMaterial({});
+                    child.material.map = new THREE.TextureLoader().load("models/TopHat/Texture_TopHat.PNG");
+                    child.castShadow = true;
+                    child.receiveShadow = false;
+                }
+            });
           object.position.y = 260;
           object.scale.set(20, 20, 20);
           scene.add(object);
@@ -279,10 +287,18 @@ class Snowglobe {
         "christmas_tree.obj",
         // called when resource is loaded
         function(object) {
+          object.traverse( function ( child ) {
+                if ( child instanceof THREE.Mesh ) {        
+                    // child.material = new THREE.MeshPhongMaterial({});
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
           object.position.x = 250;
           object.position.y = -100;
           object.position.z = -350;
           object.scale.set(380, 380, 380);
+          object.castShadow = true;
           scene.add(object);
         },
         // called when loading is in progresses
@@ -332,6 +348,7 @@ class Snowglobe {
     this.lights.push(this.createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20, -126, -54, 293, 223, -5, 256, 256));
     this.lights.push(this.createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, -20, -126, -54, -293, 223, -5, 256, 256));
     this.lights.push(this.createSpotLight(0x0000ff, 0.5, 1000, 50, 1, 0.5, 0, 0, -340, 265, 314, -521, 256, 256));
+    // this.lights.push(this.createPointLight(0xfff023, 1, 200, 800, -350));
     // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
     this.lights.push(this.createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, 0, 0, 0, 6300, 11719, 9551, 8192, 8192, "RoomLight"));
@@ -769,7 +786,7 @@ class Snowglobe {
     var pointLight = new THREE.PointLight(colour, str);
 
     if (xPos && yPos && zPos) {
-      pointLight.target.position.set(xPos, yPos, zPos);
+      pointLight.position.set(xPos, yPos, zPos);
     }
 
     pointLight.castShadow = true;
