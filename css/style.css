@@ -58,7 +58,6 @@ body{
   bottom: 50%;
   margin-left: 13px;
   transform: translateY(-30%);
-  pointer-events: none;
   /*background-color: red;*/
 }
 

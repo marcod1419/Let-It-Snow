@@ -93,90 +93,6 @@ class Snowglobe {
 
       gui.add(this.settings, "fun");
 
-      spotLights.onChange(() => {
-        if (this.settings.spotLights) {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
-              this.lights[i].visible = true;
-            }
-          }
-        } else {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
-              this.lights[i].visible = false;
-            }
-          }
-        }
-      });
-
-      roomLight.onChange(() => {
-        if (this.settings.roomLight) {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].name === "RoomLight") {
-              this.lights[i].visible = true;
-              this.lights[i].intensity = this.settings.roomLightStrength;
-            }
-          }
-        } else {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].name === "RoomLight") {
-              this.lights[i].visible = false;
-              this.lights[i].intensity = this.settings.roomLightStrength;
-            }
-          }
-        }
-      });
-
-      ambientLight.onChange(() => {
-        if (this.settings.ambientLight) {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type === "AmbientLight") {
-              this.lights[i].visible = true;
-            }
-          }
-        } else {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type === "AmbientLight") {
-              this.lights[i].visible = false;
-            }
-          }
-        }
-      });
-
-      ambientLightStrength.onChange(() => {
-        for (var i = 0; i < this.lights.length; i++) {
-          if (this.lights[i].type === "AmbientLight") {
-            this.lights[i].intensity = this.settings.ambientLightStrength;
-          }
-        }
-      });
-
-      disableShadows.onChange(() => {
-        if (this.settings.disableShadows) {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type !== "AmbientLight") {
-              renderer.shadowMap.autoUpdate = false;
-              renderer.clearTarget(this.lights[i].shadow.map);
-            }
-          }
-        } else {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type !== "AmbientLight") {
-              renderer.shadowMap.autoUpdate = true;
-              renderer.clearTarget(this.lights[i].shadow.map);
-            }
-          }
-        }
-      });
-
-      flashLight.onChange(() => {
-        cameraLight.visible = this.settings.flashlight;
-      });
-
-      flashLightStrength.onChange(() => {
-        cameraLight.intensity = this.settings.flashlightStrength;
-      });
-
        document.getElementById("rotate").addEventListener("change", () => {
           this.cameraAutoRotate = document.getElementById("rotate").checked;
         });
@@ -198,6 +114,58 @@ class Snowglobe {
           }
         }
         });
+
+       document.getElementById("ambient-light").addEventListener("change", () => {
+         if ( document.getElementById("ambient-light").checked) {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].type === "AmbientLight") {
+              this.lights[i].visible = true;
+            }
+          }
+        } else {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].type === "AmbientLight") {
+              this.lights[i].visible = false;
+            }
+          }
+        }
+        });
+
+       document.getElementById("room-light").addEventListener("change", () => {
+       	 if (document.getElementById("room-light").checked) {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].name === "RoomLight") {
+              this.lights[i].visible = true;
+              this.lights[i].intensity = this.settings.roomLightStrength;
+            }
+          }
+        } else {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].name === "RoomLight") {
+              this.lights[i].visible = false;
+              this.lights[i].intensity = this.settings.roomLightStrength;
+            }
+          }
+        }
+         
+        });
+
+       document.getElementById("spot-lights").addEventListener("change", () => {
+           if (document.getElementById("spot-lights").checked) {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
+              this.lights[i].visible = true;
+            }
+          }
+        } else {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
+              this.lights[i].visible = false;
+            }
+          }
+        }
+        });
+
 
 
 
