@@ -10,17 +10,10 @@ class Snowglobe {
 
   init() {
     //Scene size
-    // var windowWidth = window.innerWidth;
-    // var windowHeight = window.innerHeight;
     const windowWidth = 800;
     const windowHeight = 450;
 
     window.addEventListener("resize", function() {
-      // windowWidth = window.innerWidth;
-      // windowHeight = window.innerHeight;
-      // renderer.setSize(windowWidth, windowHeight);
-      // camera.aspect = window.innerWidth / window.innerHeight;
-      // camera.updateProjectionMatrix();
     var card = document.getElementById("snowman-card");
 
       if(window.innerWidth > 1095){
@@ -35,10 +28,9 @@ class Snowglobe {
 
     var renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // shadows LQ: THREE.PCFShadowMap HQ: THREE.PCFSoftShadowMap consider changing shadow res
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     var scene = new THREE.Scene();
-    // scene.background = new THREE.Color(0xb5f1ff);
 
     //Skybox
     scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBig.jpg", "wallBigDark.jpg", "3big.png", "floor.jpg", "wallBig.jpg", "wallBig.jpg"]);
@@ -73,6 +65,8 @@ class Snowglobe {
     };
 
     window.onload = () => {
+      var loading = document.getElementById("loading-screen");
+      TweenMax.to(loading, 0.5, {autoAlpha: 0});
       document.getElementById("envelope").addEventListener("click", () => {
         this.animatePage();
       }, {once: true});
@@ -183,7 +177,7 @@ class Snowglobe {
       });
 
 
-    for (var i = 0; i < this.objects.length; i++) { //TODO: Move this??
+    for (var i = 0; i < this.objects.length; i++) {
       scene.add(this.objects[i]);
     }
 

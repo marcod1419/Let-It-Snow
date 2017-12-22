@@ -1,13 +1,13 @@
 body{
-overflow: hidden;
-background-color: #c1f1ff;
-background-image: url("../img/woodbg.jpg");
+  overflow: hidden;
+  background-color: #c1f1ff;
+  background-image: url("../img/woodbg.jpg");
   height: 100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-      flex-direction: column;
-      min-width: 910px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-width: 910px;
 }
 
 #mouse-instructions{
@@ -61,14 +61,31 @@ background-image: url("../img/woodbg.jpg");
   /*background-color: red;*/
 }
 
-#screen-fade{
+.screen-cover{
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: #ffffff;
   z-index: 999999999;
-  opacity: 0;
   pointer-events: none;
+}
+
+#screen-fade{
+  opacity: 0;
+}
+
+.loading-text{
+  font-size: 100px;
+  margin: 0;
+  font-family: Helvetica;
+}
+
+#loading-screen{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction: column;
+  min-width: 910px;
 }
 
 #instructions-card{
