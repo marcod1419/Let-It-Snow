@@ -6,11 +6,9 @@ class Snowglobe {
     this.lights = [];
 
     this.cameraAutoRotate = false;
-
   }
 
   init() {
-    //Scene size
     const windowWidth = 800;
     const windowHeight = 450;
 
@@ -23,18 +21,19 @@ class Snowglobe {
     var scene = new THREE.Scene();
 
     //Skybox
-    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBigDark.jpg", "wallBigDarkRight.jpg", "ceiling.jpg", "floor.jpg", "wallBigDarkBack.jpg", "wallBigDarkForward.jpg"]);
+    scene.background = new THREE.CubeTextureLoader()
+      .setPath("img/skybox/")
+      .load(["wallBigDark.jpg", "wallBigDarkRight.jpg", "ceiling.jpg", "floor.jpg", "wallBigDarkBack.jpg", "wallBigDarkForward.jpg"]);
 
     var camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
     camera.position.set(0, 0, 3000);
     scene.add(camera);
 
-
     window.onload = () => {
       var loading = document.getElementById("loading-screen");
 
-      //Disable shadows by default	
-  	 for (var i = 0; i < this.lights.length; i++) {
+      //Disable shadows by default
+      for (var i = 0; i < this.lights.length; i++) {
         if (this.lights[i].type !== "AmbientLight") {
           renderer.shadowMap.autoUpdate = false;
           renderer.clearTarget(this.lights[i].shadow.map);
@@ -43,62 +42,60 @@ class Snowglobe {
 
       TweenMax.to(loading, 0.5, {autoAlpha: 0});
 
-      document.getElementById("envelope").addEventListener("click", () => {
+      document.getElementById("envelope").addEventListener("click",
+      () => {
         this.animatePage();
-      }, {once: true});
+      },
+      {once: true});
 
-       document.getElementById("rotate").addEventListener("change", () => {
-          this.cameraAutoRotate = document.getElementById("rotate").checked;
-        });
+      document.getElementById("rotate").addEventListener("change", () => {
+        this.cameraAutoRotate = document.getElementById("rotate").checked;
+      });
 
-       document.getElementById("shadows").addEventListener("change", () => {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type !== "AmbientLight") {
-              renderer.shadowMap.autoUpdate = document.getElementById("shadows").checked;
-              renderer.clearTarget(this.lights[i].shadow.map);
-            }
+      document.getElementById("shadows").addEventListener("change", () => {
+        for (var i = 0; i < this.lights.length; i++) {
+          if (this.lights[i].type !== "AmbientLight") {
+            renderer.shadowMap.autoUpdate = document.getElementById("shadows").checked;
+            renderer.clearTarget(this.lights[i].shadow.map);
           }
-        });
+        }
+      });
 
-       document.getElementById("ambient-light").addEventListener("change", () => {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type === "AmbientLight") {
-              this.lights[i].visible = document.getElementById("ambient-light").checked;
-            }
+      document.getElementById("ambient-light").addEventListener("change", () => {
+        for (var i = 0; i < this.lights.length; i++) {
+          if (this.lights[i].type === "AmbientLight") {
+            this.lights[i].visible = document.getElementById("ambient-light").checked;
           }
-        });
+        }
+      });
 
-       document.getElementById("room-light").addEventListener("change", () => {
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].name === "RoomLight") {
-              this.lights[i].visible = document.getElementById("room-light").checked;
-            }
+      document.getElementById("room-light").addEventListener("change", () => {
+        for (var i = 0; i < this.lights.length; i++) {
+          if (this.lights[i].name === "RoomLight") {
+            this.lights[i].visible = document.getElementById("room-light").checked;
           }
-        });
+        }
+      });
 
-       document.getElementById("spot-lights").addEventListener("change", () => {       
-          for (var i = 0; i < this.lights.length; i++) {
-            if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
-              this.lights[i].visible = document.getElementById("spot-lights").checked;
-            }
+      document.getElementById("spot-lights").addEventListener("change", () => {
+        for (var i = 0; i < this.lights.length; i++) {
+          if (this.lights[i].type === "SpotLight" && this.lights[i].name !== "RoomLight") {
+            this.lights[i].visible = document.getElementById("spot-lights").checked;
           }
-        });
+        }
+      });
 
       document.getElementById("music").addEventListener("change", () => {
-      	if(document.getElementById("music").checked){
-      		document.getElementById("bgm").play();
-      	}
-      	else{
-      		document.getElementById("bgm").pause();
-      	}
-      })
+        if (document.getElementById("music").checked) {
+          document.getElementById("bgm").play();
+        } else {
+          document.getElementById("bgm").pause();
+        }
+      });
 
-
-
-
-    for (var i = 0; i < this.objects.length; i++) {
-      scene.add(this.objects[i]);
-    }
+      for (var i = 0; i < this.objects.length; i++) {
+        scene.add(this.objects[i]);
+      }
 
       render();
       animate();
@@ -144,7 +141,7 @@ class Snowglobe {
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [16, 240, 54], "img/rock.png", "img/rock_normal.png"));
 
     //Nose
-    this.addToScene(this.createCone(5, 25, 32, 32, 0xffffff, 0, 224, 68, 90, 0, 0, "img/carrot.png", "img/carrot_normal.png", true, false));
+    this.addToScene(this.createCone(5, 25, 32, 32, 0xffffff, [0, 224, 68], [90, 0, 0], "img/carrot.png", "img/carrot_normal.png", true, false));
 
     //Mouth
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [-20, 214, 58], "img/rock.png", "img/rock_normal.png"));
@@ -160,32 +157,32 @@ class Snowglobe {
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [0, 110, 80], "img/rock.png", "img/rock_normal.png"));
 
     //TopHat
-    this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20,20,20], [0, 260, 0], [0,0,0], true, false, "Texture_TopHat.PNG");
+    this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20, 20, 20], [0, 260, 0], [0, 0, 0], true, false, "Texture_TopHat.PNG");
 
     //Sticks
-    this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25,25,25], [-80, 110, 0], [50,120,0], true, false, "Stick.jpg");
-    this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25,25,25], [80, 100, 0], [50,-120,0], true, false, "Stick.jpg");
+    this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25, 25, 25], [-80, 110, 0], [50, 120, 0], true, false, "Stick.jpg");
+    this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25, 25, 25], [80, 100, 0], [50, -120, 0], true, false, "Stick.jpg");
 
     //Christmas Tree
-    this.importObj("models/christmas_tree/", "christmas_tree.obj", "christmas_tree.mtl", [380,380,380], [250, -100, -350], [0,0,0], true, false);
+    this.importObj("models/christmas_tree/", "christmas_tree.obj", "christmas_tree.mtl", [380, 380, 380], [250, -100, -350], [0, 0, 0], true, false);
 
     //Chair
-    this.importObj("models/Chair/", "CHAIR_2012.obj", "CHAIR_2012.obj.mtl", [100,100,100], [-6000, -8000, 5000], [0,180,0], true, false);
+    this.importObj("models/Chair/", "CHAIR_2012.obj", "CHAIR_2012.obj.mtl", [100, 100, 100], [-6000, -8000, 5000], [0, 180, 0], true, false);
 
     //Sled
-    this.importObj("models/Sled/", "Sled01New.obj", "Sled01New.mtl", [600,600,600], [-200, -100, 500], [0,150,0], true, false, "Sled01new_BaseColor.png");
+    this.importObj("models/Sled/", "Sled01New.obj", "Sled01New.mtl", [600, 600, 600], [-200, -100, 500], [0, 150, 0], true, false, "Sled01new_BaseColor.png");
 
     //Monitor
-    this.importObj("models/Computer/", "cgaxis_models_volume_59_01_obj.obj", "cgaxis_models_volume_59_01_obj.mtl", [250,250,250], [-6000, -280, 500], [0,0,0], true, false);
+    this.importObj("models/Computer/", "cgaxis_models_volume_59_01_obj.obj", "cgaxis_models_volume_59_01_obj.mtl", [250, 250, 250], [-6000, -280, 500], [0, 0, 0], true, false);
 
     //Keyboard
-    this.importObj("models/Computer/", "cgaxis_models_volume_59_02_obj.obj", "cgaxis_models_volume_59_02_obj.mtl", [250,250,250], [-6000, -280, 3000], [0,0,0], true, false);
+    this.importObj("models/Computer/", "cgaxis_models_volume_59_02_obj.obj", "cgaxis_models_volume_59_02_obj.mtl", [250, 250, 250], [-6000, -280, 3000], [0, 0, 0], true, false);
 
     //Headphones
-    this.importObj("models/Computer/", "cgaxis_models_volume_59_11_obj.obj", "cgaxis_models_volume_59_11_obj.mtl", [250,250,250], [-10000, 0, 2500], [75,0,200], true, false);
+    this.importObj("models/Computer/", "cgaxis_models_volume_59_11_obj.obj", "cgaxis_models_volume_59_11_obj.mtl", [250, 250, 250], [-10000, 0, 2500], [75, 0, 200], true, false);
 
     //Lamp
-    this.importObj("models/Lamp/", "Lamp.obj", "Lamp.mtl", [12000,12000,12000], [3000, -290, -3000], [0,0,0], true, false, "Diffuse.png");
+    this.importObj("models/Lamp/", "Lamp.obj", "Lamp.mtl", [12000, 12000, 12000], [3000, -290, -3000], [0, 0, 0], true, false, "Diffuse.png");
 
     //Text
     var loader = new THREE.FontLoader();
@@ -219,8 +216,6 @@ class Snowglobe {
     this.lights.push(this.createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, [20, -126, -54], [293, 223, -5], 256, 256));
     this.lights.push(this.createSpotLight(0x00ff00, 0.3, 1000, 50, 1, 0.5, [-20, -126, -54], [-293, 223, -5], 256, 256));
     this.lights.push(this.createSpotLight(0x0000ff, 0.5, 1000, 50, 1, 0.5, [0, 0, -340], [265, 314, -521], 256, 256));
-    // this.lights.push(this.createPointLight(0xfff023, 1, 200, 800, -350));
-    // scene.add(new THREE.SpotLightHelper(this.lights[1]));
 
     this.lights.push(this.createSpotLight(0xffc53f, 0.8, 1000000, 50, 1, 0, [0, 0, 0], [6300, 11719, 9551], 8192, 8192, "RoomLight"));
 
@@ -356,12 +351,12 @@ class Snowglobe {
       sphere.receiveShadow = false;
     }
 
-    sphere.position.set(pos[0],pos[1],pos[2])
+    sphere.position.set(pos[0], pos[1], pos[2]);
 
     return sphere;
   }
 
-  createCone(rad, height, rSeg, hSeg, colour, xPos, yPos, zPos, xRot, yRot, zRot, texturePath, normalMap, castShadow = true, receiveShadow = true) {
+  createCone(rad, height, rSeg, hSeg, colour, pos, rot, texturePath, normalMap, castShadow = true, receiveShadow = true) {
     var geometry = new THREE.ConeGeometry(rad, height, rSeg, hSeg);
 
     var coneMaterial = new THREE.MeshPhongMaterial({});
@@ -381,29 +376,9 @@ class Snowglobe {
 
     const cone = new THREE.Mesh(geometry, coneMaterial);
 
-    if (xPos) {
-      cone.position.x = xPos;
-    }
+    cone.position.set(pos[0], pos[1], pos[2]);
 
-    if (yPos) {
-      cone.position.y = yPos;
-    }
-
-    if (zPos) {
-      cone.position.z = zPos;
-    }
-
-    if (xRot) {
-      cone.rotation.x = this.degToRad(xRot);
-    }
-
-    if (yRot) {
-      cone.rotation.y = this.degToRad(yRot);
-    }
-
-    if (zRot) {
-      cone.rotation.z = this.degToRad(zRot);
-    }
+    cone.rotation.set(this.degToRad(rot[0]), this.degToRad(rot[1]), this.degToRad(rot[2]));
 
     cone.castShadow = castShadow;
     cone.receiveShadow = receiveShadow;
@@ -502,7 +477,6 @@ class Snowglobe {
 
     spotLight.position.set(rot[0], rot[1], rot[2]);
 
-
     spotLight.name = name;
 
     return spotLight;
@@ -557,7 +531,6 @@ class Snowglobe {
   }
 
   animatePage() {
-    //Page Animation
     var timeline = new TimelineMax({});
     var envelope = document.getElementById("envelope");
     var card = document.getElementById("snowman-card");
@@ -573,29 +546,26 @@ class Snowglobe {
         onComplete: () => {
           TweenMax.set(envelope, {autoAlpha: 0, display: "none"});
           TweenMax.set(instructionsCard, {display: "block"});
-          if(window.innerWidth > 1095){
-         	 TweenMax.set(card, {x: 300});
-          }
-          else{
-          	if(this.mobileCheck()){
-            	TweenMax.set(mouseInstructions, {display: "none"});
-          	}
+          if (window.innerWidth > 1095) {
+            TweenMax.set(card, {x: 300});
+          } else {
+            if (this.mobileCheck()) {
+              TweenMax.set(mouseInstructions, {display: "none"});
+            }
           }
           TweenMax.set(cardContainer, {overflow: "visible"});
           TweenMax.set(instructionsCard, {autoAlpha: 1});
 
           document.getElementById("bgm").volume = 0.7;
-    	  document.getElementById("bgm").play();
+          document.getElementById("bgm").play();
 
-    	  window.addEventListener("resize", function() {
-		      if(window.innerWidth > 1095){
-		         	 TweenMax.set(card, {x: 300});
-		         }
-		        else{
-		         	 TweenMax.set(card, {x: 0});
-		        }
-		    });
-
+          window.addEventListener("resize", function() {
+            if (window.innerWidth > 1095) {
+              TweenMax.set(card, {x: 300});
+            } else {
+              TweenMax.set(card, {x: 0});
+            }
+          });
         }
       })
     );
@@ -618,57 +588,64 @@ class Snowglobe {
     timeline.play();
   }
 
-  importObj(dir, obj, mtl, scale, pos, rot, castShadow=false, receiveShadow=true, texture){
-  	THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+  importObj(dir, obj, mtl, scale, pos, rot, castShadow = false, receiveShadow = true, texture) {
+    THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
     var mtlLoader = new THREE.MTLLoader();
     mtlLoader.setPath(dir);
-    mtlLoader.load(mtl, (materials) => {
+    mtlLoader.load(mtl, materials => {
       materials.preload();
       var objLoader = new THREE.OBJLoader();
       objLoader.setMaterials(materials);
       objLoader.setPath(dir);
-      objLoader.load(obj,(object) => {
-          object.traverse( function ( child ) {
-                if ( child instanceof THREE.Mesh ) {
-                	if (texture){
-                	   child.material = new THREE.MeshPhongMaterial({});
-                       child.material.map = new THREE.TextureLoader().load(dir+texture);
-                	}        
-                    child.castShadow = castShadow;
-                    child.receiveShadow = receiveShadow;
-                }
-            });
+      objLoader.load(
+        obj,
+        object => {
+          object.traverse(function(child) {
+            if (child instanceof THREE.Mesh) {
+              if (texture) {
+                child.material = new THREE.MeshPhongMaterial({});
+                child.material.map = new THREE.TextureLoader().load(dir + texture);
+              }
+              child.castShadow = castShadow;
+              child.receiveShadow = receiveShadow;
+            }
+          });
           object.scale.set(scale[0], scale[1], scale[2]);
-          object.position.x = pos[0];
-          object.position.y = pos[1];
-          object.position.z = pos[2];
-          object.rotation.x = this.degToRad(rot[0]);
-          object.rotation.y = this.degToRad(rot[1]);
-          object.rotation.z = this.degToRad(rot[2]);
+
+          object.position.set(pos[0], pos[1], pos[2]);
+
+          object.rotation.set(this.degToRad(rot[0]), this.degToRad(rot[1]), this.degToRad(rot[2]));
+
           object.castShadow = castShadow;
           object.receiveShadow = receiveShadow;
           this.addToScene(object);
         },
-        // called when loading is in progresses
         function(xhr) {
           // console.log(xhr.loaded / xhr.total * 100 + "% loaded!!!!!!");
         },
-        // called when loading has errors
         function(error) {
-          console.warn("An obj loading error occured. ("+obj+")");
+          console.warn("An obj loading error occured. (" + obj + ")");
         }
       );
     });
   }
 
-   mobileCheck(){
-      var check = false;
-      (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
-      return check;
-  };
+  mobileCheck() {
+    var check = false;
+    (function(a) {
+      if (
+        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(
+          a
+        ) ||
+        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+          a.substr(0, 4)
+        )
+      )
+        check = true;
+    })(navigator.userAgent || navigator.vendor || window.opera);
+    return check;
+  }
 }
-
-
 
 var snowglobe = new Snowglobe();
 snowglobe.init();
