@@ -86,6 +86,7 @@ body{
   align-items:center;
   flex-direction: column;
   min-width: 910px;
+  cursor: initial;
 }
 
 #instructions-card{
@@ -116,6 +117,9 @@ input[type=checkbox]
 	}
 
 @media (max-width: 1095px){
+	body{
+		overflow-y: auto;
+	}
 	#mouse-instructions{
 		position: relative;
 	}
@@ -125,19 +129,20 @@ input[type=checkbox]
 	}
 	#instructions-card{
 		width: 95%;
-		max-width: 500px;
-  		height: 560px;
+		max-width: 800px;
+  		height: 40%;
 	    transform: rotate(0deg);
 	    left: initial;
 	    bottom: initial;
 	    position: relative;
-	    margin-top: 50px;
 	    display: none;
+	    top: 32%;
+	    padding-bottom: 120px;
 	}
 	#options{
       width: 100%;
       padding: 30px;
-      font-size: 50px;
+      font-size: 2.5rem;
     }
 	#envelope{
 		max-width: 0px;
