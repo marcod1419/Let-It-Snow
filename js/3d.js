@@ -41,7 +41,7 @@ class Snowglobe {
     // scene.background = new THREE.Color(0xb5f1ff);
 
     //Skybox
-    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wall4.png", "wall1.png", "3.png", "floor.png", "wall3.png", "wall2.png"]);
+    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBig.jpg", "wallBig.jpg", "3big.png", "floor.jpg", "wallBig.jpg", "wallBig.jpg"]);
 
     var camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
     camera.position.set(0, 0, 3000);
@@ -195,14 +195,14 @@ class Snowglobe {
     var rotateReset;
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.5;
-    controls.enablePan = true; //TODO set to false
+    controls.enablePan = false; //TODO set to false
     controls.target.set(0, 225, 0);
     controls.enableDamping = true;
     controls.maxPolarAngle = this.degToRad(90);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.15;
     controls.minDistance = 250;
-    controls.maxDistance = 100000; //10000
+    controls.maxDistance = 10000; //10000
     controls.addEventListener("change", () => {
       render();
     });
@@ -267,6 +267,8 @@ class Snowglobe {
     //Headphones
     this.importObj("models/Computer/", "cgaxis_models_volume_59_11_obj.obj", "cgaxis_models_volume_59_11_obj.mtl", [250,250,250], [-10000, 0, 2500], [75,0,200], true, false);
 
+    //Lamp
+    this.importObj("models/Lamp/", "Lamp.obj", "Lamp.mtl", [12000,12000,12000], [3000, -290, -3000], [0,0,0], true, false, "Diffuse.png");
 
     //Text
     var loader = new THREE.FontLoader();
