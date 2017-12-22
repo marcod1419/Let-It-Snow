@@ -212,7 +212,7 @@ class Snowglobe {
     container.appendChild(renderer.domElement);
 
     //Table
-    this.addToScene(this.createBox(50000, 800, 20000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, -15000, -695, -300));
+    this.addToScene(this.createBox(20000, 800, 10000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, -5000, -695, -300));
 
     //Base
     this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -248,8 +248,15 @@ class Snowglobe {
     //Christmas Tree
     this.importObj("models/christmas_tree/", "christmas_tree.obj", "christmas_tree.mtl", [380,380,380], [250, -100, -350], [0,0,0], true, false);
 
-   //Chair
-    this.importObj("models/Chair/", "CHAIR_2012.obj", "CHAIR_2012.obj.mtl", [250,250,250], [-10000, -15000, 7000], [0,180,0], true, false);
+    //Chair
+    this.importObj("models/Chair/", "CHAIR_2012.obj", "CHAIR_2012.obj.mtl", [100,100,100], [-6000, -8000, 5000], [0,180,0], true, false);
+
+    //Sled
+    this.importObj("models/Sled/", "Sled01New.obj", "Sled01New.mtl", [600,600,600], [-200, -100, 500], [0,150,0], true, false, "Sled01new_BaseColor.png");
+
+    //Monitor
+    this.importObj("models/Monitor/", "cgaxis_models_volume_59_01_obj.obj", "cgaxis_models_volume_59_01_obj.mtl", [250,250,250], [-6000, -250, 500], [0,0,0], true, false);
+
 
     //Text
     var loader = new THREE.FontLoader();
