@@ -1,55 +1,58 @@
+# Blender MTL File: 'christmas_tree_internal.blend'
+# Material Count: 6
+
 newmtl branches
+Ns 0.000000
 Ka 0.000000 0.000000 0.000000
-Kd 0.065426 0.347489 0.000000
+Kd 0.800000 0.800000 0.800000
 Ks 0.000000 0.000000 0.000000
-Ns 2.000000
+Ni 1.000000
 d 1.000000
-Tr 0.000000
-map_Kd branch00000003.png 
-map_D branch00000003.png 
+illum 1
+map_Kd branch.png
+map_d branch.png
 
 newmtl gold
+Ns 13.725490
 Ka 0.000000 0.000000 0.000000
 Kd 0.496920 0.471582 0.114475
 Ks 0.696017 0.656768 0.261984
-Ns 13.725490
+Ni 1.000000
 d 1.000000
-Tr 0.000000
-map_Kd gold - Default Texture0003.psd 
+illum 2
 
 newmtl red-ball
+Ns 190.196078
 Ka 0.000000 0.000000 0.000000
 Kd 0.517331 0.007343 0.000000
 Ks 0.797872 0.359201 0.328700
-Ns 190.196106
+Ni 1.000000
 d 1.000000
-Tr 0.000000
-map_Kd red-ball - Default Texture0003.psd 
+illum 2
 
 newmtl silver
+Ns 11.764706
 Ka 0.000000 0.000000 0.000000
 Kd 0.429224 0.429224 0.429224
 Ks 0.814046 0.814046 0.814046
-Ns 11.764705
+Ni 1.000000
 d 1.000000
-Tr 0.000000
-map_Kd silver - Default Texture0003.psd 
+illum 2
 
 newmtl trunk
+Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.162641 0.115484 0.047035
 Ks 0.000000 0.000000 0.000000
-Ns 2.000000
+Ni 1.000000
 d 1.000000
-Tr 0.000000
-map_Kd trunk - Default Texture0003.psd 
+illum 1
 
 newmtl white-handle
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.764069 0.764069 0.764069
 Ks 0.334146 0.334146 0.334146
-Ns 96.078430
+Ni 1.000000
 d 1.000000
-Tr 0.000000
-map_Kd white-handle - Default Texture0003.psd 
-
+illum 2

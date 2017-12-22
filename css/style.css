@@ -94,7 +94,6 @@ body{
   height: 560px;
   position: absolute;
   left: 100px;
-/*  bottom: 110px;*/
   transform: rotate(20deg);
   background-color: #f7ecc3;
   opacity: 0;
@@ -117,11 +116,12 @@ input[type=checkbox]
 	}
 
 @media (max-width: 1095px){
-	body{
+/*	body{
 		overflow-y: auto;
-	}
+	}*/
 	#mouse-instructions{
 		position: relative;
+		height: 30%;
 	}
 	#snowman-card{
 		position: relative;
@@ -142,7 +142,7 @@ input[type=checkbox]
 	#options{
       width: 100%;
       padding: 30px;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
     }
 	#envelope{
 		max-width: 0px;
@@ -156,11 +156,18 @@ input[type=checkbox]
 }
 
 @media (max-height: 850px){
-	body{
+/*	body{
 		overflow: auto;
-	}
+	}*/
 	#snowman-card{
 		position: relative;
 	    top: 100px;
 	}
+
+
+@media (max-height: 850px) and (max-width: 1095px){
+	#instructions-card{
+		visibility: hidden !important;
+	}
+
 }

@@ -127,7 +127,7 @@ class Snowglobe {
     this.addToScene(this.createBox(20000, 800, 10000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, [-5000, -695, -300]));
 
     //Base
-    this.addToScene(this.createGlobeBase(900, 200, 0x845100, "img/globe_base.png", "img/globe_base_normal.png", 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createGlobeBase(900, 200, 0xffffff, "img/globe_base.png", "img/globe_base_normal.png", [0, -201, 0], 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
     this.addToScene(this.createSphere(900, 900, 50, 0xffffff, [0, -102, 0], null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
@@ -153,6 +153,11 @@ class Snowglobe {
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [4, 203, 58], "img/rock.png", "img/rock_normal.png"));
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [12, 207, 58], "img/rock.png", "img/rock_normal.png"));
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [20, 214, 58], "img/rock.png", "img/rock_normal.png"));
+
+    //Buttons
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [0, 150, 70], "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [0, 130, 78], "img/rock.png", "img/rock_normal.png"));
+    this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [0, 110, 80], "img/rock.png", "img/rock_normal.png"));
 
     //TopHat
     this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20,20,20], [0, 260, 0], [0,0,0], true, false, "Texture_TopHat.PNG");
@@ -435,134 +440,7 @@ class Snowglobe {
     return box;
   }
 
-  createPlane(width, height, colour, xPos, yPos, zPos, texturePath, normalMap) {
-    var geometry = new THREE.PlaneGeometry(width, height, 32);
-
-    var planeMaterial = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
-
-    if (colour != null) {
-      planeMaterial.color = new THREE.Color(colour);
-    }
-
-    if (texturePath != null) {
-      var texture = new THREE.TextureLoader().load(texturePath);
-      planeMaterial.map = texture;
-    }
-
-    if (normalMap != null) {
-      planeMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
-    }
-
-    var plane = new THREE.Mesh(geometry, planeMaterial);
-    plane.rotateX(-Math.PI / 2);
-    if (xPos) {
-      plane.position.x = xPos;
-    }
-
-    if (yPos) {
-      plane.position.y = yPos;
-    }
-
-    if (zPos) {
-      plane.position.z = zPos;
-    }
-
-    plane.receiveShadow = true;
-
-    return plane;
-  }
-
-  createCirclePlane(rad, seg, colour, xPos, yPos, zPos, texturePath, normalMap) {
-    var geometry = new THREE.CircleGeometry(rad, seg, 16); //TODO: Add sides param to function
-
-    var circlePlaneMaterial = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
-
-    if (colour != null) {
-      circlePlaneMaterial.color = new THREE.Color(colour);
-    }
-
-    if (texturePath != null) {
-      var texture = new THREE.TextureLoader().load(texturePath);
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(16, 16);
-      circlePlaneMaterial.map = texture;
-    }
-
-    if (normalMap != null) {
-      circlePlaneMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
-    }
-
-    var circlePlane = new THREE.Mesh(geometry, circlePlaneMaterial);
-
-    circlePlane.rotateX(-Math.PI / 2);
-    if (xPos) {
-      circlePlane.position.x = xPos;
-    }
-
-    if (yPos) {
-      circlePlane.position.y = yPos;
-    }
-
-    if (zPos) {
-      circlePlane.position.z = zPos;
-    }
-
-    circlePlane.castShadow = false;
-    circlePlane.receiveShadow = true;
-    return circlePlane;
-  }
-
-  createCylinder(radTop, radBottom, height, colour, texturePath, normalMap, xPos, yPos, zPos) {
-    var cylinderGeo = new THREE.CylinderGeometry(radTop, radBottom, height, 16, 16); //TODO: Add sides param to function
-
-    var cylinderMaterial = new THREE.MeshPhongMaterial({});
-
-    if (colour != null) {
-      cylinderMaterial.color = new THREE.Color(colour);
-    }
-
-    if (texturePath != null) {
-      var texture = new THREE.TextureLoader().load(texturePath);
-      cylinderMaterial.map = texture;
-    }
-
-    if (normalMap != null) {
-      cylinderMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
-    }
-
-    var cylinder = new THREE.Mesh(cylinderGeo, cylinderMaterial);
-
-    if (xPos) {
-      cylinder.position.x = xPos;
-    }
-
-    if (yPos) {
-      cylinder.position.y = yPos;
-    }
-
-    if (zPos) {
-      cylinder.position.z = zPos;
-    }
-
-    cylinder.castShadow = true;
-    cylinder.receiveShadow = true;
-
-    return cylinder;
-  }
-
-  createTree(width, height, xPos, yPos, zPos) {
-    var tree = [];
-
-    tree.push(this.createCylinder(width, width, height, 0x593c2f, "img/trunk.jpg", "img/trunk_normal.png", xPos, yPos, zPos));
-    tree.push(this.createCone(width * 4, height / 2, 32, 32, 0x00ff00, xPos, yPos + height / 1.5, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png", true, true));
-    tree.push(this.createCone(width * 4.5, height / 2, 32, 32, 0x00ff00, xPos, yPos + height / 1.2, zPos, 0, 0, 0, "img/tree.jpg", "img/tree_normal.png", true, true));
-    // tree.push(this.createCone(width*5, height/2, 32, 32, 0x00ff00, xPos, yPos+height/1, zPos, 0, 0, 0, "", "")); Art stuff, let's deal with it later.
-
-    return tree;
-  }
-
-  createGlobeBase(width, height, colour, texturePath, normalMap, xPos, yPos, zPos, groundColour, groundTexturePath, groundNormalMap) {
+  createGlobeBase(width, height, colour, texturePath, normalMap, pos, groundColour, groundTexturePath, groundNormalMap) {
     var cylinderGeo = new THREE.CylinderGeometry(width, width, height, 64, 64);
 
     var cylinderMaterial = new THREE.MeshPhongMaterial({});
@@ -604,38 +482,12 @@ class Snowglobe {
 
     var cylinder = new THREE.Mesh(cylinderGeo, baseMaterials);
 
-    if (xPos) {
-      cylinder.position.x = xPos;
-    }
-
-    if (yPos) {
-      cylinder.position.y = yPos;
-    }
-
-    if (zPos) {
-      cylinder.position.z = zPos;
-    }
+    cylinder.position.set(pos[0], pos[1], pos[2]);
 
     cylinder.castShadow = false;
     cylinder.receiveShadow = true;
 
     return cylinder;
-  }
-
-  createPointLight(colour, str, xPos, yPos, zPos) {
-    var pointLight = new THREE.PointLight(colour, str);
-
-    if (xPos && yPos && zPos) {
-      pointLight.position.set(xPos, yPos, zPos);
-    }
-
-    pointLight.castShadow = true;
-    pointLight.shadow.mapSize.width = 256;
-    pointLight.shadow.mapSize.height = 256;
-    pointLight.shadow.camera.near = 0.5;
-    pointLight.shadow.camera.far = 5000;
-
-    return pointLight;
   }
 
   createSpotLight(colour, str, distance, angle, blur, decay, pos, rot, shadowW, shadowH, name = "") {
@@ -654,25 +506,6 @@ class Snowglobe {
     spotLight.name = name;
 
     return spotLight;
-  }
-
-  createDirectionalLight(colour, str, xPos, yPos, zPos, xRot, yRot, zRot) {
-    var directionalLight = new THREE.DirectionalLight(colour, str);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 256;
-    directionalLight.shadow.mapSize.height = 256;
-    directionalLight.shadow.camera.near = 0.5;
-    directionalLight.shadow.camera.far = 5000;
-
-    if (xPos && yPos && zPos) {
-      directionalLight.target.position.set(xPos, yPos, zPos);
-    }
-
-    if (xRot && yRot && zRot) {
-      directionalLight.position.set(xRot, yRot, zRot);
-    }
-
-    return directionalLight;
   }
 
   setAmbientLight(colour, str) {
