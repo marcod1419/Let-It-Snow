@@ -1,10 +1,13 @@
 body{
-	overflow: hidden;
-	background-color: #c1f1ff;
+overflow: hidden;
+background-color: #c1f1ff;
+background-image: url("../img/woodbg.jpg");
   height: 100%;
   display:flex;
   justify-content:center;
   align-items:center;
+      flex-direction: column;
+      min-width: 910px;
 }
 
 #mouse-instructions{
@@ -41,6 +44,9 @@ body{
   opacity: 0;
   visibility: hidden;
   /*display: none;*/
+  -webkit-box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
+	-moz-box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
+	box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
 }
 
 #card-container{
@@ -49,8 +55,9 @@ body{
   height: 530px;
   z-index: 9999;
   overflow: hidden;
-  bottom: 66%;
-  margin-left: 13px;
+    bottom: 50%;
+    margin-left: 13px;
+    transform: translateY(-30%);
   /*background-color: red;*/
 }
 
@@ -69,14 +76,51 @@ body{
   height: 560px;
   position: absolute;
   left: 100px;
-  bottom: 110px;
+/*  bottom: 110px;*/
   transform: rotate(20deg);
   background-color: #f7ecc3;
   opacity: 0;
   visibility: hidden;
+  -webkit-box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
+-moz-box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
+box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
 }
 
 .dg.ac{
-  /*visibility: hidden;*/
+  visibility: hidden;
   z-index: 9999999999999;
+}
+
+@media (max-width: 1095px){
+	#mouse-instructions{
+		position: relative;
+	}
+	#snowman-card{
+		position: relative;
+		bottom: 100px;
+	}
+	#instructions-card{
+		width: 95%;
+		max-width: 500px;
+  		height: 560px;
+	    transform: rotate(0deg);
+	    left: initial;
+	    bottom: initial;
+	    position: relative;
+	    margin-top: 50px;
+	    display: none;
+	}
+	#envelope{
+		max-width: 0px;
+	}
+}
+
+@media (max-height: 850px){
+	body{
+		overflow: auto;
+	}
+	#snowman-card{
+		position: relative;
+	    top: 100px;
+	}
 }

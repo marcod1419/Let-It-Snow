@@ -1,0 +1,24 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.29665513)
+
+newmtl IR
+kd 0.164706 0.164706 0.164706
+ka 0.164706 0.164706 0.164706
+ks 0 0 0
+ke 0 0 0
+d 1
+Ns 2
+illum 2
+
+newmtl WO
+kd 0.588235 0.588235 0.588235
+ka 0.588235 0.588235 0.588235
+ks 0 0 0
+ke 0 0 0
+d 1
+Ns 2
+illum 2
+map_kd ZI_01.bmp
+bump ZI_01_B.bmp
+map_bump ZI_01_B.bmp
+

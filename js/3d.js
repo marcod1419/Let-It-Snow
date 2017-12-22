@@ -15,13 +15,21 @@ class Snowglobe {
     const windowWidth = 800;
     const windowHeight = 450;
 
-    // window.addEventListener("resize", function() {
-    //   windowWidth = window.innerWidth;
-    //   windowHeight = window.innerHeight;
-    //   renderer.setSize(windowWidth, windowHeight);
-    //   camera.aspect = window.innerWidth / window.innerHeight;
-    //   camera.updateProjectionMatrix();
-    // });
+    window.addEventListener("resize", function() {
+      // windowWidth = window.innerWidth;
+      // windowHeight = window.innerHeight;
+      // renderer.setSize(windowWidth, windowHeight);
+      // camera.aspect = window.innerWidth / window.innerHeight;
+      // camera.updateProjectionMatrix();
+    var card = document.getElementById("snowman-card");
+
+      if(window.innerWidth > 1095){
+         	 TweenMax.set(card, {x: 300});
+         }
+        else{
+         	 TweenMax.set(card, {x: 0});
+        }
+    });
 
     const container = document.querySelector("#container");
 
@@ -174,6 +182,11 @@ class Snowglobe {
         cameraLight.intensity = this.settings.flashlightStrength;
       });
 
+
+    for (var i = 0; i < this.objects.length; i++) { //TODO: Move this??
+      scene.add(this.objects[i]);
+    }
+
       render();
       animate();
     };
@@ -182,14 +195,14 @@ class Snowglobe {
     var rotateReset;
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.5;
-    controls.enablePan = false;
+    controls.enablePan = true; //TODO set to false
     controls.target.set(0, 225, 0);
     controls.enableDamping = true;
     controls.maxPolarAngle = this.degToRad(90);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.15;
     controls.minDistance = 250;
-    controls.maxDistance = 10000;
+    controls.maxDistance = 100000; //10000
     controls.addEventListener("change", () => {
       render();
     });
@@ -229,88 +242,14 @@ class Snowglobe {
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 12, 207, 58, "img/rock.png", "img/rock_normal.png"));
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, 20, 214, 58, "img/rock.png", "img/rock_normal.png"));
 
-    //Trees
-    const treeCount = 0;
-    var treePos = this.randomNumberArray(-600, 600, -600, 700, 0, 0, 0, 0, treeCount, 20); //TODO: Make sure trees dont go out back
-    for (var i = 0; i < treeCount; i++) {
-      this.addToScene(this.createTree(30, 220, treePos[0][i], 0, treePos[1][i]));
-    }
-
     //TopHat
-    THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath("models/TopHat/");
-    mtlLoader.load("TopHat.mtl", function(materials) {
-      materials.preload();
-      var objLoader = new THREE.OBJLoader();
-      objLoader.setMaterials(materials);
-      objLoader.setPath("models/TopHat/");
-      objLoader.load(
-        // resource URL
-        "TopHat.obj",
-        // called when resource is loaded
-        function(object) {
-           object.traverse( function ( child ) {
-                if ( child instanceof THREE.Mesh ) {        
-                    child.material = new THREE.MeshPhongMaterial({});
-                    child.material.map = new THREE.TextureLoader().load("models/TopHat/Texture_TopHat.PNG");
-                    child.castShadow = true;
-                    child.receiveShadow = false;
-                }
-            });
-          object.position.y = 260;
-          object.scale.set(20, 20, 20);
-          scene.add(object);
-        },
-        // called when loading is in progresses
-        function(xhr) {
-          console.log(xhr.loaded / xhr.total * 100 + "% loaded");
-        },
-        // called when loading has errors
-        function(error) {
-          console.log("An error happened");
-        }
-      );
-    });
+    this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20,20,20], [0, 260, 0], [0,0,0], true, false, "Texture_TopHat.PNG");
 
     //Christmas Tree
-    THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath("models/christmas_tree/");
-    mtlLoader.load("christmas_tree.mtl", function(materials) {
-      materials.preload();
-      var objLoader = new THREE.OBJLoader();
-      objLoader.setMaterials(materials);
-      objLoader.setPath("models/christmas_tree/");
-      objLoader.load(
-        // resource URL
-        "christmas_tree.obj",
-        // called when resource is loaded
-        function(object) {
-          object.traverse( function ( child ) {
-                if ( child instanceof THREE.Mesh ) {        
-                    // child.material = new THREE.MeshPhongMaterial({});
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
-            });
-          object.position.x = 250;
-          object.position.y = -100;
-          object.position.z = -350;
-          object.scale.set(380, 380, 380);
-          object.castShadow = true;
-          scene.add(object);
-        },
-        // called when loading is in progresses
-        function(xhr) {
-          console.log(xhr.loaded / xhr.total * 100 + "% loaded");
-        },
-        // called when loading has errors
-        function(error) {
-          console.log("An error happened");
-        }
-      );
-    });
+    this.importObj("models/christmas_tree/", "christmas_tree.obj", "christmas_tree.mtl", [380,380,380], [250, -100, -350], [0,0,0], true, false);
+
+   //Chair
+    this.importObj("models/Chair/", "CHAIR_2012.obj", "CHAIR_2012.obj.mtl", [250,250,250], [-10000, -15000, 7000], [0,180,0], true, false);
 
     //Text
     var loader = new THREE.FontLoader();
@@ -339,10 +278,6 @@ class Snowglobe {
       textMesh.position.set(-550, 400, -5);
       scene.add(textMesh);
     });
-
-    for (var i = 0; i < this.objects.length; i++) {
-      scene.add(this.objects[i]);
-    }
 
     //Lights
     this.lights.push(this.createSpotLight(0xff0000, 0.3, 1000, 50, 1, 0.5, 20, -126, -54, 293, 223, -5, 256, 256));
@@ -901,7 +836,12 @@ class Snowglobe {
         delay: 1,
         onComplete: () => {
           TweenMax.set(envelope, {autoAlpha: 0});
-          TweenMax.set(card, {x: 300});
+          if(window.innerWidth > 1095){
+         	 TweenMax.set(card, {x: 300});
+          }
+          else{
+          	TweenMax.set(instructionsCard, {display: "block"});
+          }
           TweenMax.set(cardContainer, {overflow: "visible"});
           TweenMax.set(instructionsCard, {autoAlpha: 1});
         }
@@ -926,6 +866,49 @@ class Snowglobe {
     timeline.play();
     // TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
     // TweenMax.fromTo(document.getElementById("snowman-card"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
+  }
+
+  importObj(dir, obj, mtl, scale, pos, rot, castShadow=false, receiveShadow=true, texture){
+  	THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath(dir);
+    mtlLoader.load(mtl, (materials) => {
+      materials.preload();
+      var objLoader = new THREE.OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath(dir);
+      objLoader.load(obj,(object) => {
+          object.traverse( function ( child ) {
+                if ( child instanceof THREE.Mesh ) {
+                	if (texture){
+                	   child.material = new THREE.MeshPhongMaterial({});
+                       child.material.map = new THREE.TextureLoader().load(dir+texture);
+                	}        
+                    child.castShadow = castShadow;
+                    child.receiveShadow = receiveShadow;
+                }
+            });
+          object.scale.set(scale[0], scale[1], scale[2]);
+          object.position.x = pos[0];
+          object.position.y = pos[1];
+          object.position.z = pos[2];
+          object.rotation.x = this.degToRad(rot[0]);
+          object.rotation.y = this.degToRad(rot[1]);
+          object.rotation.z = this.degToRad(rot[2]);
+          object.castShadow = castShadow;
+          object.receiveShadow = receiveShadow;
+          this.addToScene(object);
+        },
+        // called when loading is in progresses
+        function(xhr) {
+          console.log(xhr.loaded / xhr.total * 100 + "% loaded!!!!!!");
+        },
+        // called when loading has errors
+        function(error) {
+          console.warn("An obj loading error occured. ("+obj+")");
+        }
+      );
+    });
   }
 }
 
