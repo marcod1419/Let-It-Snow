@@ -41,7 +41,7 @@ class Snowglobe {
     // scene.background = new THREE.Color(0xb5f1ff);
 
     //Skybox
-    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBig.jpg", "wallBig.jpg", "3big.png", "floor.jpg", "wallBig.jpg", "wallBig.jpg"]);
+    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBig.jpg", "wallBigDark.jpg", "3big.png", "floor.jpg", "wallBig.jpg", "wallBig.jpg"]);
 
     var camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
     camera.position.set(0, 0, 3000);
@@ -202,7 +202,7 @@ class Snowglobe {
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.15;
     controls.minDistance = 250;
-    controls.maxDistance = 10000; //10000
+    controls.maxDistance = 8000; //10000
     controls.addEventListener("change", () => {
       render();
     });
