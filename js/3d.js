@@ -127,7 +127,7 @@ class Snowglobe {
     this.addToScene(this.createGlobeBase(900, 200, 0xffffff, "img/globe_base.png", "img/globe_base_normal.png", [0, -201, 0], 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
-    this.addToScene(this.createSphere(900, 900, 50, 0xffffff, [0, -102, 0], null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
+    this.addToScene(this.createSphere(900, 900, 50, 0xffffff, [0, -102, 0], null, null, 0.2, scene.background, 0.95, false, false, true));
 
     //~Body~
     this.addToScene(this.createSphere(120, 50, 16, 0xffffff, [0, -40, 0], "img/ground_snow.jpg", "img/ground_snow_normal.png"));
@@ -157,7 +157,7 @@ class Snowglobe {
     this.addToScene(this.createSphere(4, 50, 8, 0xffffff, [0, 110, 80], "img/rock.png", "img/rock_normal.png"));
 
     //TopHat
-    this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20, 20, 20], [0, 260, 0], [0, 0, 0], true, false, "Texture_TopHat.PNG");
+    this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20, 20, 20], [0, 260, 0], [0, 0, 0], true, false, "Texture_TopHat0000.png");
 
     //Sticks
     this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25, 25, 25], [-80, 110, 0], [50, 120, 0], true, false, "Stick.jpg");
@@ -304,7 +304,7 @@ class Snowglobe {
     };
   }
 
-  createSphere(rad, seg, ring, colour, pos, texturePath, normalMap, alphaMap, envMap, refractionRatio, depthWrite = true, wireframeEnabled = false, isGlobeGlass = false) {
+  createSphere(rad, seg, ring, colour, pos, texturePath, normalMap, opacity, envMap, refractionRatio, depthWrite = true, wireframeEnabled = false, isGlobeGlass = false) {
     const RADIUS = rad;
     const SEGMENTS = seg;
     const RINGS = ring;
@@ -324,9 +324,10 @@ class Snowglobe {
       sphereMaterial.normalMap = new THREE.TextureLoader().load(normalMap);
     }
 
-    if (alphaMap != null) {
+    if (opacity != null) {
       sphereMaterial.transparent = true;
-      sphereMaterial.alphaMap = new THREE.TextureLoader().load(alphaMap);
+      sphereMaterial.opacity = opacity;
+
     }
 
     if (envMap != null) {
@@ -498,36 +499,6 @@ class Snowglobe {
     } else {
       this.objects.push(obj);
     }
-  }
-
-  randomNumber(min, max, spacing = 0, rollNegative) {
-    var num = Math.floor(Math.random() * (max - min)) + min + spacing;
-    if (rollNegative) {
-      num *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
-    }
-
-    return num;
-  }
-
-  randomNumberArray(minX, maxX, minZ, maxZ, xLimitMin, xLimitMax, zLimitMin, zLimitMax, amount, spacing) {
-    var pos = [[], []];
-    var xPos;
-    var zPos;
-
-    for (var i = 0; i < amount; i++) {
-      xPos = this.randomNumber(minX, maxX, spacing, true);
-      zPos = this.randomNumber(minZ, maxZ, spacing, true);
-
-      if (xPos >= xLimitMin && xPos <= xLimitMax) {
-        while (zPos >= zLimitMin && zPos <= zLimitMax) {
-          zPos = this.randomNumber(minZ, maxZ, spacing, true);
-        }
-      }
-      pos[0].push(xPos);
-      pos[1].push(zPos);
-    }
-
-    return pos;
   }
 
   animatePage() {
