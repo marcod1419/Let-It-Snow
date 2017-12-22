@@ -6,6 +6,7 @@ class Snowglobe {
     this.lights = [];
 
     this.cameraAutoRotate = false;
+
   }
 
   init() {
@@ -176,10 +177,35 @@ class Snowglobe {
         cameraLight.intensity = this.settings.flashlightStrength;
       });
 
+       document.getElementById("rotate").addEventListener("change", () => {
+          this.cameraAutoRotate = document.getElementById("rotate").checked;
+        });
+
+       document.getElementById("shadows").addEventListener("change", () => {
+           if (document.getElementById("shadows").checked) {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].type !== "AmbientLight") {
+              renderer.shadowMap.autoUpdate = true;
+              renderer.clearTarget(this.lights[i].shadow.map);
+            }
+          }
+        } else {
+          for (var i = 0; i < this.lights.length; i++) {
+            if (this.lights[i].type !== "AmbientLight") {
+              renderer.shadowMap.autoUpdate = false;
+              renderer.clearTarget(this.lights[i].shadow.map);
+            }
+          }
+        }
+        });
+
+
 
     for (var i = 0; i < this.objects.length; i++) {
       scene.add(this.objects[i]);
     }
+
+   
 
       render();
       animate();
@@ -382,6 +408,7 @@ class Snowglobe {
       // lights[3].target.position.z = this.settings.z2;
 
       controls.autoRotateSpeed = this.settings.cameraAutoRotateSpeed;
+
       controls.autoRotate = this.cameraAutoRotate;
 
       controls.update();
@@ -840,6 +867,7 @@ class Snowglobe {
     var card = document.getElementById("snowman-card");
     var cardContainer = document.getElementById("card-container");
     var instructionsCard = document.getElementById("instructions-card");
+    var mouseInstructions = document.getElementById("mouse-instructions");
     var fade = document.getElementById("screen-fade");
     timeline.add(TweenMax.fromTo(card, 1, {autoAlpha: 1, y: 500}, {autoAlpha: 1, y: 300}));
     timeline.add(
@@ -853,6 +881,7 @@ class Snowglobe {
           }
           else{
           	TweenMax.set(instructionsCard, {display: "block"});
+            TweenMax.set(mouseInstructions, {display: "none"});
           }
           TweenMax.set(cardContainer, {overflow: "visible"});
           TweenMax.set(instructionsCard, {autoAlpha: 1});

@@ -55,9 +55,10 @@ body{
   height: 530px;
   z-index: 9999;
   overflow: hidden;
-    bottom: 50%;
-    margin-left: 13px;
-    transform: translateY(-30%);
+  bottom: 50%;
+  margin-left: 13px;
+  transform: translateY(-30%);
+  pointer-events: none;
   /*background-color: red;*/
 }
 
@@ -101,6 +102,12 @@ body{
   -webkit-box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
 -moz-box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
 box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
+}
+
+#options{
+  width: 30%;
+  padding: 30px;
+  font-size: 24px;
 }
 
 .dg.ac{
