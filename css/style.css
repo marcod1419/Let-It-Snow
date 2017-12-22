@@ -107,12 +107,13 @@ box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
   width: 30%;
   padding: 30px;
   font-size: 24px;
+  font-family: Helvetica;
 }
 
-.dg.ac{
-  visibility: hidden;
-  z-index: 9999999999999;
-}
+input[type=checkbox]
+	{
+	  margin: 5px;
+	}
 
 @media (max-width: 1095px){
 	#mouse-instructions{
@@ -133,8 +134,19 @@ box-shadow: -2px 2px 5px 0px rgba(0,0,0,0.47);
 	    margin-top: 50px;
 	    display: none;
 	}
+	#options{
+      width: 100%;
+      padding: 30px;
+      font-size: 50px;
+    }
 	#envelope{
 		max-width: 0px;
+	}
+
+	input[type=checkbox]
+	{
+	  transform: scale(2);
+	  padding: 10px;
 	}
 }
 
