@@ -33,7 +33,7 @@ class Snowglobe {
     var scene = new THREE.Scene();
 
     //Skybox
-    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBig.jpg", "wallBigDark.jpg", "3big.png", "floor.jpg", "wallBig.jpg", "wallBig.jpg"]);
+    scene.background = new THREE.CubeTextureLoader().setPath("img/skybox/").load(["wallBigDark.jpg", "wallBigDarkRight.jpg", "ceiling.jpg", "floor.jpg", "wallBigDarkBack.jpg", "wallBigDarkForward.jpg"]);
 
     var camera = new THREE.PerspectiveCamera(20, windowWidth / windowHeight, 1, 500000);
     camera.position.set(0, 0, 3000);
