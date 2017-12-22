@@ -1,0 +1,13 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.29665513)
+
+newmtl Material.001
+kd 0.64 0.64 0.64
+ka 1 1 1
+ks 0.015464 0.015464 0.015464
+ke 0 0 0
+d 1
+Ns 78.4314
+illum 2
+map_kd C:\Users\Оксана\Desktop\Books\blender\Textures\kora dreva 2.jpg
+

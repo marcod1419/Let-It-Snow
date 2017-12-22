@@ -245,6 +245,10 @@ class Snowglobe {
     //TopHat
     this.importObj("models/TopHat/", "TopHat.obj", "TopHat.mtl", [20,20,20], [0, 260, 0], [0,0,0], true, false, "Texture_TopHat.PNG");
 
+    //Sticks
+    this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25,25,25], [-80, 110, 0], [50,120,0], true, false, "Stick.jpg");
+    this.importObj("models/Stick/", "Stick.obj", "Stick.obj.mtl", [25,25,25], [80, 100, 0], [50,-120,0], true, false, "Stick.jpg");
+
     //Christmas Tree
     this.importObj("models/christmas_tree/", "christmas_tree.obj", "christmas_tree.mtl", [380,380,380], [250, -100, -350], [0,0,0], true, false);
 
@@ -255,7 +259,13 @@ class Snowglobe {
     this.importObj("models/Sled/", "Sled01New.obj", "Sled01New.mtl", [600,600,600], [-200, -100, 500], [0,150,0], true, false, "Sled01new_BaseColor.png");
 
     //Monitor
-    this.importObj("models/Monitor/", "cgaxis_models_volume_59_01_obj.obj", "cgaxis_models_volume_59_01_obj.mtl", [250,250,250], [-6000, -250, 500], [0,0,0], true, false);
+    this.importObj("models/Computer/", "cgaxis_models_volume_59_01_obj.obj", "cgaxis_models_volume_59_01_obj.mtl", [250,250,250], [-6000, -280, 500], [0,0,0], true, false);
+
+    //Keyboard
+    this.importObj("models/Computer/", "cgaxis_models_volume_59_02_obj.obj", "cgaxis_models_volume_59_02_obj.mtl", [250,250,250], [-6000, -280, 3000], [0,0,0], true, false);
+
+    //Headphones
+    this.importObj("models/Computer/", "cgaxis_models_volume_59_11_obj.obj", "cgaxis_models_volume_59_11_obj.mtl", [250,250,250], [-10000, 0, 2500], [75,0,200], true, false);
 
 
     //Text
@@ -835,7 +845,6 @@ class Snowglobe {
     var cardContainer = document.getElementById("card-container");
     var instructionsCard = document.getElementById("instructions-card");
     var fade = document.getElementById("screen-fade");
-    console.log(this.cameraAutoRotate);
     timeline.add(TweenMax.fromTo(card, 1, {autoAlpha: 1, y: 500}, {autoAlpha: 1, y: 300}));
     timeline.add(
       TweenMax.to(fade, 1, {
@@ -871,8 +880,6 @@ class Snowglobe {
     envelopeOpen.play();
 
     timeline.play();
-    // TweenMax.fromTo(document.getElementById("mouse-instructions"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
-    // TweenMax.fromTo(document.getElementById("snowman-card"), 0.6, {autoAlpha: 0, y: 500}, {autoAlpha: 1, y: 0, ease: Back.easeOut});
   }
 
   importObj(dir, obj, mtl, scale, pos, rot, castShadow=false, receiveShadow=true, texture){
@@ -908,7 +915,7 @@ class Snowglobe {
         },
         // called when loading is in progresses
         function(xhr) {
-          console.log(xhr.loaded / xhr.total * 100 + "% loaded!!!!!!");
+          // console.log(xhr.loaded / xhr.total * 100 + "% loaded!!!!!!");
         },
         // called when loading has errors
         function(error) {
