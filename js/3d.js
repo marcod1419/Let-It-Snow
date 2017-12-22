@@ -56,6 +56,7 @@ class Snowglobe {
       }
 
       TweenMax.to(loading, 0.5, {autoAlpha: 0});
+
       document.getElementById("envelope").addEventListener("click", () => {
         this.animatePage();
       }, {once: true});
@@ -97,6 +98,15 @@ class Snowglobe {
           }
         });
 
+      document.getElementById("music").addEventListener("change", () => {
+      	if(document.getElementById("music").checked){
+      		document.getElementById("bgm").play();
+      	}
+      	else{
+      		document.getElementById("bgm").pause();
+      	}
+      })
+
 
 
 
@@ -132,7 +142,7 @@ class Snowglobe {
     this.addToScene(this.createBox(20000, 800, 10000, 0xffffff, "img/desk.jpg", "img/desk_normal.png", 100, -5000, -695, -300));
 
     //Base
-    this.addToScene(this.createGlobeBase(900, 200, 0x845100, null, null, 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
+    this.addToScene(this.createGlobeBase(900, 200, 0x845100, "img/globe_base.png", "img/globe_base_normal.png", 0, -201, 0, 0xffffff, "img/ground_snow.jpg", "img/ground_snow_normal.png"));
 
     //Glass
     this.addToScene(this.createSphere(900, 900, 50, 0xffffff, 0, -102, 0, null, null, "img/glass_alpha.png", scene.background, 0.95, false, false, true));
@@ -773,6 +783,9 @@ class Snowglobe {
           }
           TweenMax.set(cardContainer, {overflow: "visible"});
           TweenMax.set(instructionsCard, {autoAlpha: 1});
+
+          document.getElementById("bgm").volume = 0.7;
+    	  document.getElementById("bgm").play();
         }
       })
     );
