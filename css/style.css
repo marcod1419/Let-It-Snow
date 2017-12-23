@@ -107,6 +107,10 @@ input[type=checkbox] {
   margin: 5px;
 }
 
+#mobile-disclaimer{
+  visibility: hidden;
+}
+
 @media (max-width: 1095px) {
   #mouse-instructions {
     position: relative;
@@ -139,6 +143,11 @@ input[type=checkbox] {
   input[type=checkbox] {
     transform: scale(2);
     padding: 10px;
+  }
+
+  #mobile-disclaimer{
+    font-size: 24px;
+    visibility: visible;
   }
 }
 
